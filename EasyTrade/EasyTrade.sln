@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.API", "EasyTrade.API\EasyTrade.API.csproj", "{A7C0BF53-D8B5-49A3-82ED-CB9A9ED87AAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.DAL", "EasyTrade.DAL\EasyTrade.DAL.csproj", "{697D227F-E702-42BA-A9A8-8E76FF92A5D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.Service", "EasyTrade.Service\EasyTrade.Service.csproj", "{0FE81D07-CE1A-47EF-8DCA-B6E8CDE7C654}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.Test", "EasyTrade.Test\EasyTrade.Test.csproj", "{F97FECB9-56ED-44EB-A3DE-280D8AD84A59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7C0BF53-D8B5-49A3-82ED-CB9A9ED87AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C0BF53-D8B5-49A3-82ED-CB9A9ED87AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C0BF53-D8B5-49A3-82ED-CB9A9ED87AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C0BF53-D8B5-49A3-82ED-CB9A9ED87AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{697D227F-E702-42BA-A9A8-8E76FF92A5D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{697D227F-E702-42BA-A9A8-8E76FF92A5D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{697D227F-E702-42BA-A9A8-8E76FF92A5D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{697D227F-E702-42BA-A9A8-8E76FF92A5D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE81D07-CE1A-47EF-8DCA-B6E8CDE7C654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE81D07-CE1A-47EF-8DCA-B6E8CDE7C654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE81D07-CE1A-47EF-8DCA-B6E8CDE7C654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE81D07-CE1A-47EF-8DCA-B6E8CDE7C654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F97FECB9-56ED-44EB-A3DE-280D8AD84A59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F97FECB9-56ED-44EB-A3DE-280D8AD84A59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F97FECB9-56ED-44EB-A3DE-280D8AD84A59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F97FECB9-56ED-44EB-A3DE-280D8AD84A59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
