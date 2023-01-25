@@ -1,3 +1,10 @@
+using EasyTrade.DAL.Configuration;
+using EasyTrade.DAL.DatabaseContext;
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<IEasyTradeDbContext, EasyTradeDbContext>()
+    .Configure<DbConfigutation>(configuration.GetSection("Database"));
+    
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
