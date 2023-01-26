@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace EasyTrade.DAL.Model;
 
 public abstract class Trade
@@ -8,6 +10,8 @@ public abstract class Trade
 }
 public class CurrencyTrade : Trade
 {
-    public Currency BuyCurrency { get; set; }
-    public Currency SellCurrency { get; set; }
+    public uint BuyCcyId { get; set; }
+    public uint SellCcyId { get; set; }
+    public Currency BuyCcy { get; set; }
+    public Currency SellCcy { get; set; }
 }
