@@ -1,5 +1,10 @@
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.DAL.Model;
+using EasyTrade.Service.Configuration;
+using EasyTrade.Service.Extensions;
+using EasyTrade.Service.Services;
+using Microsoft.EntityFrameworkCore;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -7,19 +12,34 @@ var configuration = new ConfigurationBuilder()
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<IEasyTradeDbContext, EasyTradeDbContext>()
-    .Configure<DbConfigutation>(configuration.GetSection("Database"));
+var optionsBuilder = new DbContextOptionsBuilder<EasyTradeDbContext>();
+var x = configuration.GetSection("Database").Get<DbConfigutation>();
+var options = optionsBuilder.UseNpgsql(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString);
+var dd = options.Options;
+
+builder.Services.AddDbContextPool<EasyTradeDbContext>(o =>
+{
+    o.UseNpgsql(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString);
+});
+
+builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
+    .AddLocalCurrenciesProvider()
+    .AddSingleton<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
+    .AddSingleton<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
+    .AddSingleton<ICoefficientProvider, CoefficientProvider>();
     
+
+
+
+
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
