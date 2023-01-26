@@ -1,5 +1,6 @@
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DAL.Model;
+using EasyTrade.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
@@ -9,18 +10,24 @@ namespace EasyTrade.API.Controllers;
 public class ClientTradeController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
-    private IEasyTradeDbContext _db;
-    public ClientTradeController(ILogger<ClientTradeController> logger, IEasyTradeDbContext dbContext)
+    private EasyTradeDbContext _db;
+    private IClientCurrencyTradeCreator _tradeCreator;
+    
+    public ClientTradeController(ILogger<ClientTradeController> logger, EasyTradeDbContext dbContext, 
+        IClientCurrencyTradeCreator tradeCreator)
     {
         _logger = logger;
         _db = dbContext;
+        _tradeCreator = tradeCreator;
     }
 
     [HttpPost("CreateTrade")]
     public IActionResult CreateTrade(string buyCcy, string sellCcy, 
         decimal? buyAmount = null,  decimal? sellAmount = null)
     {
-        return Ok();
+        var result = _tradeCreator.Create(buyCcy, sellCcy, buyAmount, sellAmount);
+        result = _db.AddTrade(result);
+        return Ok(result);
     }
     
     [HttpGet]
