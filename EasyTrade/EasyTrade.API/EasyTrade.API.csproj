@@ -15,10 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyTrade.DAL\EasyTrade.DAL.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Configuration" />
+      <ProjectReference Include="..\EasyTrade.Service\EasyTrade.Service.csproj" />
     </ItemGroup>
 
 </Project>
