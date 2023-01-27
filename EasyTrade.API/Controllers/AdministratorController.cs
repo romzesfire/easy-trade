@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class AdministratorController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
@@ -11,14 +13,14 @@ public class AdministratorController : ControllerBase
         _logger = logger;
     }
     
-    [HttpPost]
+    [HttpPost("ReplenishBalance")]
     public IActionResult ReplenishBalance(string ccy, decimal amount)
     {
         return Ok();
     }
 
-    [HttpPost]
-    public IActionResult RefreshCoefficient(decimal coefficient, string ccy = null)
+    [HttpPost("RefreshCoefficient")]
+    public IActionResult RefreshCoefficient(decimal coefficient)
     {
         return Ok();
     }
