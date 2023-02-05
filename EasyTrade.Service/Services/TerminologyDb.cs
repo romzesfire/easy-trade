@@ -1,5 +1,5 @@
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
+using EasyTrade.DTO.Model;
 using EasyTrade.Service.Abstractions;
 
 namespace EasyTrade.Service.Services;
@@ -14,6 +14,6 @@ public class TerminologyDb : ITerminologyApi
     }
     public IEnumerable<Currency> GetAvailableCurrencies()
     {
-        return _dbContext.GetCurrencies();
+        return _dbContext.GetCurrencies().Select(c=>new Currency(c.Id, c.Name, c.IsoCode));
     }
 }

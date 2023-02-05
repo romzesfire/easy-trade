@@ -1,3 +1,5 @@
+using EasyTrade.DTO.Model;
+
 namespace EasyTrade.DAL.Model;
 
 public class ClientCurrencyTrade : CurrencyTrade
@@ -6,7 +8,7 @@ public class ClientCurrencyTrade : CurrencyTrade
     public BrokerCurrencyTrade BrokerCurrencyTrade { get; set; }
     public ClientCurrencyTrade(){ }
     public ClientCurrencyTrade(Currency buyCcy, Currency sellCcy, 
-        decimal buyAmount,  decimal sellAmount, BrokerCurrencyTrade brokerTrade)
+        decimal buyAmount,  decimal sellAmount, BrokerCurrencyTrade brokerTrade, DateTimeOffset dateTime)
     {
         BuyCcy = buyCcy;
         SellCcy = sellCcy;
@@ -16,6 +18,7 @@ public class ClientCurrencyTrade : CurrencyTrade
         BuyCcyId = buyCcy.Id;
         SellCcyId = sellCcy.Id;
         BrokerCurrencyTradeId = brokerTrade.Id;
+        DateTime = dateTime;
     }
     
     public object Clone()

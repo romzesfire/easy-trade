@@ -15,9 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+string connectionString = configuration.GetConnectionString("Database");
 var optionsBuilder = new DbContextOptionsBuilder<EasyTradeDbContext>();
-var x = configuration.GetSection("Database").Get<DbConfigutation>();
+
 var options = optionsBuilder.UseNpgsql(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString);
 var dd = options.Options;
 
@@ -31,12 +31,6 @@ builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<Quot
     .AddSingleton<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
     .AddSingleton<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
     .AddSingleton<ICoefficientProvider, CoefficientProvider>();
-    
-
-
-
-
-
 
 var app = builder.Build();
 

@@ -1,10 +1,12 @@
+using EasyTrade.DTO.Model;
+
 namespace EasyTrade.DAL.Model;
 
 public class BrokerCurrencyTrade : CurrencyTrade, ICloneable
 {
     public BrokerCurrencyTrade(){}
     public BrokerCurrencyTrade(Currency buyCcy, Currency sellCcy, 
-        decimal buyAmount, decimal sellAmount)
+        decimal buyAmount, decimal sellAmount, DateTimeOffset dateTime)
     {
         BuyCcy = buyCcy;
         SellCcy = sellCcy;
@@ -12,6 +14,7 @@ public class BrokerCurrencyTrade : CurrencyTrade, ICloneable
         SellAmount = sellAmount;
         BuyCcyId = buyCcy.Id;
         SellCcyId = sellCcy.Id;
+        DateTime = dateTime;
     }
 
 
