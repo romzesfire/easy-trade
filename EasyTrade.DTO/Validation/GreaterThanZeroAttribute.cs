@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EasyTrade.API.Validation;
+namespace EasyTrade.DTO.Validation;
 
 public class GreaterThanZeroAttribute : ValidationAttribute
 {

@@ -21,4 +21,8 @@
       <ProjectReference Include="..\EasyTrade.DTO\EasyTrade.DTO.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Model" />
+    </ItemGroup>
+
 </Project>

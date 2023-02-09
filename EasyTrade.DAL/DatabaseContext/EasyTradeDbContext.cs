@@ -2,8 +2,6 @@ using EasyTrade.DAL.Configuration;
 using EasyTrade.DTO.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using BrokerCurrencyTrade = EasyTrade.DAL.Model.BrokerCurrencyTrade;
-using ClientCurrencyTrade = EasyTrade.DAL.Model.ClientCurrencyTrade;
 
 namespace EasyTrade.DAL.DatabaseContext;
 
@@ -52,20 +50,10 @@ public class EasyTradeDbContext : DbContext
     //
     // }
 
-    public ClientCurrencyTrade AddTrade(ClientCurrencyTrade currencyTrade)
+    public void AddTrade(ClientCurrencyTrade currencyTrade)
     {
-        var brokerTrade = currencyTrade.BrokerCurrencyTrade;
-        currencyTrade.BrokerCurrencyTrade = null;
-        brokerTrade.BuyCcy = null;
-        brokerTrade.SellCcy = null;
-        currencyTrade.BuyCcy = null;
-        currencyTrade.SellCcy = null;
-        _brokerTrades.AddRange(brokerTrade);
+        _clientTrades.Add(currencyTrade);
         SaveChanges();
-        currencyTrade.BrokerCurrencyTradeId = brokerTrade.Id;
-        _clientTrades.AddRange(currencyTrade);
-        SaveChanges();
-        return currencyTrade;
     }
     public IEnumerable<Currency> GetCurrencies()
     {
