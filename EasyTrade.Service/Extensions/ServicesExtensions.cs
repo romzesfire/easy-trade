@@ -34,8 +34,7 @@ public static class ServicesExtensions
 
     public static IServiceCollection AddDbServices(this IServiceCollection services, string connectionString)
     {
-        services.AddSingleton<ITradeSaver, TradesToDbSaver>()
-            .AddDbContextPool<EasyTradeDbContext>(o =>
+        services.AddDbContextPool<EasyTradeDbContext>(o =>
             {
                 o.UseNpgsql(connectionString);
             });
