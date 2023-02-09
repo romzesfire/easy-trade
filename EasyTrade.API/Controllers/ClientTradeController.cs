@@ -1,7 +1,7 @@
-using EasyTrade.API.Model;
+
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model;
 using EasyTrade.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -15,14 +15,12 @@ public class ClientTradeController : ControllerBase
     private readonly ILogger<ClientTradeController> _logger;
     private EasyTradeDbContext _db;
     private IClientCurrencyTradeCreator _tradeCreator;
-    private ICurrenciesValidator _currenciesValidator;
     public ClientTradeController(ILogger<ClientTradeController> logger, EasyTradeDbContext dbContext, 
-        IClientCurrencyTradeCreator tradeCreator, ICurrenciesValidator currenciesValidator)
+        IClientCurrencyTradeCreator tradeCreator)
     {
         _logger = logger;
         _db = dbContext;
         _tradeCreator = tradeCreator;
-        _currenciesValidator = currenciesValidator;
     }
     //Как добавлять БД в DI если она в DAL?
     //2 Get метода
@@ -36,10 +34,18 @@ public class ClientTradeController : ControllerBase
         //FluentValidator
         //CQRS
         //ModelState.Values.Where(s=>s.)
-        ModelErrorCollection
-        var result = _tradeCreator.Create(buyModel);
-        result = _db.AddTrade(result);
-        return Ok(result);
+        _tradeCreator.Create(buyModel);
+        return Ok();
+    }
+    
+    [HttpPost("Sell")]//Buy, Sell
+    public IActionResult Sell(SellTradeCreationModel sellModel)
+    {
+        //FluentValidator
+        //CQRS
+        //ModelState.Values.Where(s=>s.)
+        _tradeCreator.Create(sellModel);
+        return Ok();
     }
     
     [HttpGet]
