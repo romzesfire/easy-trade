@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyTrade.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Trades : Migration
+    public partial class TradesDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,7 @@ namespace EasyTrade.DAL.Migrations
                     DateTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     BuyAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     SellAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    TradeType = table.Column<int>(type: "integer", nullable: false),
                     BuyCcyId = table.Column<long>(type: "bigint", nullable: false),
                     SellCcyId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -65,6 +66,7 @@ namespace EasyTrade.DAL.Migrations
                     DateTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     BuyAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     SellAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    TradeType = table.Column<int>(type: "integer", nullable: false),
                     BuyCcyId = table.Column<long>(type: "bigint", nullable: false),
                     SellCcyId = table.Column<long>(type: "bigint", nullable: false)
                 },
