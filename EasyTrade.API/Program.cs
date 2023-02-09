@@ -1,6 +1,6 @@
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
+using EasyTrade.DTO.Abstractions;
 using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Extensions;
 using EasyTrade.Service.Services;
@@ -21,16 +21,14 @@ var optionsBuilder = new DbContextOptionsBuilder<EasyTradeDbContext>();
 var options = optionsBuilder.UseNpgsql(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString);
 var dd = options.Options;
 
-builder.Services.AddDbContextPool<EasyTradeDbContext>(o =>
-{
-    o.UseNpgsql(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString);
-});
 
 builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
     .AddLocalCurrenciesProvider()
-    .AddSingleton<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
-    .AddSingleton<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
-    .AddSingleton<ICoefficientProvider, CoefficientProvider>();
+    .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
+    .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
+    .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
+    .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
+    .AddScoped<ICoefficientProvider, CoefficientProvider>();
 
 var app = builder.Build();
 
