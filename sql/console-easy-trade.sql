@@ -31,13 +31,13 @@ SELECT * FROM "_brokerTrades";
 
 SELECT * FROM "_clientTrades";
 
-DROP TABLE currency;
-DROP TABLE broker_trade;
-DROP TABLE client_trade;
+DROP TABLE "_currencies";
+DROP TABLE "_brokerTrades";
+DROP TABLE "_clientTrades";
 
 INSERT INTO broker_trade(BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (10, 600, 2, 1);
 INSERT INTO client_trade(BrokerCurrencyTradeId, BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (2, 10, 600, 2, 1);
 
-INSERT INTO currency (Name, IsoCode) VALUES ('Russian rouble', 'RUB');
-INSERT INTO currency (Name, IsoCode) VALUES ('Dollar USA', 'USD');
-INSERT INTO currency (Name, IsoCode) VALUES ('Euro', 'EUR');
+INSERT INTO "_currencies" ("Name", "IsoCode") VALUES ('Russian rouble', 'RUB');
+INSERT INTO "_currencies" ("Name", "IsoCode") VALUES ('Dollar USA', 'USD');
+INSERT INTO "_currencies" ("Name", "IsoCode") VALUES ('Euro', 'EUR');
