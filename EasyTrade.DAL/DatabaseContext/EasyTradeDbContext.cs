@@ -60,10 +60,15 @@ public class EasyTradeDbContext : DbContext
         return _currencies.ToList();
     }
 
-    public List<ClientCurrencyTrade> GetTrades()
+    public List<ClientCurrencyTrade> GetTrades(int limit, int offset)
     {
-        return _clientTrades.Include(t => t.BrokerCurrencyTrade)
+        return _clientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList();
+    }
+
+    public Trade GetTrade(uint id)
+    {
+        return _clientTrades.First(t => t.Id == id);
     }
 }

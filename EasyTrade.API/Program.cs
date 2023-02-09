@@ -24,6 +24,7 @@ var dd = options.Options;
 
 builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
     .AddLocalCurrenciesProvider()
+    .AddScoped<ITradesProvider, TradesDbProvider>()
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()

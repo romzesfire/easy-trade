@@ -15,17 +15,18 @@ public class ClientTradeController : ControllerBase
     private readonly ILogger<ClientTradeController> _logger;
     private EasyTradeDbContext _db;
     private IClientCurrencyTradeCreator _tradeCreator;
+    public ITradesProvider _tradesProvider;
     public ClientTradeController(ILogger<ClientTradeController> logger, EasyTradeDbContext dbContext, 
-        IClientCurrencyTradeCreator tradeCreator)
+        IClientCurrencyTradeCreator tradeCreator, ITradesProvider tradesProvider)
     {
         _logger = logger;
         _db = dbContext;
         _tradeCreator = tradeCreator;
+        _tradesProvider = tradesProvider;
     }
-    //Как добавлять БД в DI если она в DAL?
+    //ДТО зависит от DAL это ок?
     //2 Get метода
     //DTO
-    //Интерфейсы сервисов в DTO
     //REST API - посмотреть структуру и применить к методам
     //БД в сервисы убрать
     [HttpPost("Buy")]//Buy, Sell
@@ -41,18 +42,35 @@ public class ClientTradeController : ControllerBase
     [HttpPost("Sell")]//Buy, Sell
     public IActionResult Sell(SellTradeCreationModel sellModel)
     {
-        //FluentValidator
-        //CQRS
-        //ModelState.Values.Where(s=>s.)
         _tradeCreator.Create(sellModel);
         return Ok();
     }
     
-    [HttpGet]
-    public IActionResult GetBalance(string ccy)
+    [HttpGet("Trades")]
+    public IActionResult GetTrades(int limit = 20, int offset = 0)
     {
-        return Ok();
+        var trades = _tradesProvider.GetTrades(limit, offset);
+        return Ok(trades);
     }
+    
+    [HttpGet("Trades/{id}")]
+    public IActionResult GetBalance(uint id)
+    {
+        var trade = _tradesProvider.GetTrade(id);
+        return Ok(trade);
+    }
+    
+    // [HttpGet("Balance")]
+    // public IActionResult GetBalance(string ccy)
+    // {
+    //     return Ok();
+    // }
+    //
+    // [HttpGet]
+    // public IActionResult GetBalance(string ccy)
+    // {
+    //     return Ok();
+    // }
     
     [HttpPost("Withdraw")]
     public IActionResult WithdrawToCard(string ccy, decimal amount,  
