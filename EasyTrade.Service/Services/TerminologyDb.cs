@@ -14,6 +14,6 @@ public class TerminologyDb : ITerminologyApi
     }
     public IEnumerable<Currency> GetAvailableCurrencies()
     {
-        return _dbContext.GetCurrencies().Select(c=>new Currency(c.Id, c.Name, c.IsoCode));
+        return _dbContext.GetCurrencies().ToList();
     }
 }

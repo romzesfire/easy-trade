@@ -1,12 +1,9 @@
+using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model;
 using EasyTrade.Service.Abstractions;
-using EasyTrade.Service.Model;
 
 namespace EasyTrade.Service.Services;
 
-public interface IQuotesProvider
-{
-    public Quote Get(string from, string to);
-}
 
 public class QuotesProvider : IQuotesProvider
 {
