@@ -69,6 +69,8 @@ public class EasyTradeDbContext : DbContext
 
     public Trade GetTrade(uint id)
     {
-        return _clientTrades.First(t => t.Id == id);
+        return _clientTrades.Where(t => t.Id == id).Include(t => t.BrokerCurrencyTrade)
+            .Include(t => t.BuyCcy)
+            .Include(t => t.SellCcy).First();
     }
 }
