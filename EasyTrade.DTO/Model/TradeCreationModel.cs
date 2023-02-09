@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EasyTrade.API.Model;
+namespace EasyTrade.DTO.Model;
 
 public class TradeCreationModel
 {

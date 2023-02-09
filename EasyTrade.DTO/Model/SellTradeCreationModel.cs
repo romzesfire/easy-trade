@@ -1,6 +1,6 @@
-using EasyTrade.API.Validation;
+using EasyTrade.DTO.Validation;
 
-namespace EasyTrade.API.Model;
+namespace EasyTrade.DTO.Model;
 
 public class SellTradeCreationModel : TradeCreationModel
 {

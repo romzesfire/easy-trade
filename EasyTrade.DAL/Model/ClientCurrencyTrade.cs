@@ -6,32 +6,18 @@ public class ClientCurrencyTrade : CurrencyTrade
 {
     public uint BrokerCurrencyTradeId { get; set; }
     public BrokerCurrencyTrade BrokerCurrencyTrade { get; set; }
-    public ClientCurrencyTrade(){ }
-    public ClientCurrencyTrade(Currency buyCcy, Currency sellCcy, 
-        decimal buyAmount,  decimal sellAmount, BrokerCurrencyTrade brokerTrade, DateTimeOffset dateTime)
+
+    public ClientCurrencyTrade()
     {
-        BuyCcy = buyCcy;
-        SellCcy = sellCcy;
+        
+    }
+    public ClientCurrencyTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
+    {
+        BuyCcy = brokerTrade.BuyCcy;
+        SellCcy = brokerTrade.SellCcy;
         BuyAmount = buyAmount;
         SellAmount = sellAmount;
         BrokerCurrencyTrade = brokerTrade;
-        BuyCcyId = buyCcy.Id;
-        SellCcyId = sellCcy.Id;
-        BrokerCurrencyTradeId = brokerTrade.Id;
-        DateTime = dateTime;
-    }
-    
-    public object Clone()
-    {
-        return new ClientCurrencyTrade()
-        {
-            BuyCcy = BuyCcy,
-            SellCcy = SellCcy,
-            BuyAmount = BuyAmount,
-            SellAmount = BuyAmount,
-            BuyCcyId = BuyCcyId,
-            SellCcyId = SellCcyId,
-            BrokerCurrencyTrade = BrokerCurrencyTrade,
-        };
+        DateTime = brokerTrade.DateTime;
     }
 }

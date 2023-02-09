@@ -1,4 +1,6 @@
-namespace EasyTrade.Service.Model;
+using EasyTrade.Service.Model;
+
+namespace EasyTrade.DTO.Model;
 
 public class Quote
 {

@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using EasyTrade.DTO.Model;
+
+
 
 namespace EasyTrade.DAL.Model;
 
@@ -12,8 +12,7 @@ public abstract class Trade //Datetime + timezone
 }
 public class CurrencyTrade : Trade 
 {
-    public uint BuyCcyId { get; set; }
-    public uint SellCcyId { get; set; }
+    public TradeType TradeType { get; set; }
     public Currency BuyCcy { get; set; }
     public Currency SellCcy { get; set; }
 }
