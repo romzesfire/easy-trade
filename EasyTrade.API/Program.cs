@@ -1,3 +1,4 @@
+using System.Text.Json;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DTO.Abstractions;
@@ -24,12 +25,13 @@ var dd = options.Options;
 
 builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
     .AddLocalCurrenciesProvider()
+    .AddScoped<IBalanceProvider, BalanceDbProvider>()
     .AddScoped<ITradesProvider, TradesDbProvider>()
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
     .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
-    .AddScoped<ICoefficientProvider, CoefficientProvider>();
+    .AddScoped<ICoefficientProvider, CoefficientsDbProvider>();
 
 var app = builder.Build();
 
