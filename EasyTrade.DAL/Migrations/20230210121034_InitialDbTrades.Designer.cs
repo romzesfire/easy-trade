@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyTrade.DAL.Migrations
 {
     [DbContext(typeof(EasyTradeDbContext))]
-    [Migration("20230209211656_TradesDb")]
-    partial class TradesDb
+    [Migration("20230210121034_InitialDbTrades")]
+    partial class InitialDbTrades
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,46 @@ namespace EasyTrade.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("EasyTrade.DAL.Model.TradeCoefficient", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Coefficient")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Operation")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("coefficients");
+                });
+
+            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<long>("CurrencyId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.ToTable("balances");
+                });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>
                 {
@@ -57,7 +97,7 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasIndex("SellCcyId");
 
-                    b.ToTable("_brokerTrades");
+                    b.ToTable("brokerTrades");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.ClientCurrencyTrade", b =>
@@ -97,7 +137,7 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasIndex("SellCcyId");
 
-                    b.ToTable("_clientTrades");
+                    b.ToTable("clientTrades");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.Currency", b =>
@@ -118,7 +158,18 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("_currencies");
+                    b.ToTable("currencies");
+                });
+
+            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+                {
+                    b.HasOne("EasyTrade.DTO.Model.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>

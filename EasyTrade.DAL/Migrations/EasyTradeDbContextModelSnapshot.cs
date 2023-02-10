@@ -22,6 +22,46 @@ namespace EasyTrade.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("EasyTrade.DAL.Model.TradeCoefficient", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Coefficient")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Operation")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("coefficients");
+                });
+
+            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<long>("CurrencyId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.ToTable("balances");
+                });
+
             modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>
                 {
                     b.Property<long>("Id")
@@ -54,7 +94,7 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasIndex("SellCcyId");
 
-                    b.ToTable("_brokerTrades");
+                    b.ToTable("brokerTrades");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.ClientCurrencyTrade", b =>
@@ -94,7 +134,7 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasIndex("SellCcyId");
 
-                    b.ToTable("_clientTrades");
+                    b.ToTable("clientTrades");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.Currency", b =>
@@ -115,7 +155,18 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("_currencies");
+                    b.ToTable("currencies");
+                });
+
+            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+                {
+                    b.HasOne("EasyTrade.DTO.Model.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>

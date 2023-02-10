@@ -7,13 +7,27 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyTrade.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class TradesDb : Migration
+    public partial class InitialDbTrades : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "_currencies",
+                name: "coefficients",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Operation = table.Column<int>(type: "integer", nullable: false),
+                    Coefficient = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_coefficients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "currencies",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -23,11 +37,31 @@ namespace EasyTrade.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__currencies", x => x.Id);
+                    table.PrimaryKey("PK_currencies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "_brokerTrades",
+                name: "balances",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CurrencyId = table.Column<long>(type: "bigint", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_balances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_balances_currencies_CurrencyId",
+                        column: x => x.CurrencyId,
+                        principalTable: "currencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "brokerTrades",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -41,23 +75,23 @@ namespace EasyTrade.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__brokerTrades", x => x.Id);
+                    table.PrimaryKey("PK_brokerTrades", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__brokerTrades__currencies_BuyCcyId",
+                        name: "FK_brokerTrades_currencies_BuyCcyId",
                         column: x => x.BuyCcyId,
-                        principalTable: "_currencies",
+                        principalTable: "currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__brokerTrades__currencies_SellCcyId",
+                        name: "FK_brokerTrades_currencies_SellCcyId",
                         column: x => x.SellCcyId,
-                        principalTable: "_currencies",
+                        principalTable: "currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "_clientTrades",
+                name: "clientTrades",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -72,50 +106,55 @@ namespace EasyTrade.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__clientTrades", x => x.Id);
+                    table.PrimaryKey("PK_clientTrades", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__clientTrades__brokerTrades_BrokerCurrencyTradeId",
+                        name: "FK_clientTrades_brokerTrades_BrokerCurrencyTradeId",
                         column: x => x.BrokerCurrencyTradeId,
-                        principalTable: "_brokerTrades",
+                        principalTable: "brokerTrades",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__clientTrades__currencies_BuyCcyId",
+                        name: "FK_clientTrades_currencies_BuyCcyId",
                         column: x => x.BuyCcyId,
-                        principalTable: "_currencies",
+                        principalTable: "currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__clientTrades__currencies_SellCcyId",
+                        name: "FK_clientTrades_currencies_SellCcyId",
                         column: x => x.SellCcyId,
-                        principalTable: "_currencies",
+                        principalTable: "currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX__brokerTrades_BuyCcyId",
-                table: "_brokerTrades",
+                name: "IX_balances_CurrencyId",
+                table: "balances",
+                column: "CurrencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_brokerTrades_BuyCcyId",
+                table: "brokerTrades",
                 column: "BuyCcyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX__brokerTrades_SellCcyId",
-                table: "_brokerTrades",
+                name: "IX_brokerTrades_SellCcyId",
+                table: "brokerTrades",
                 column: "SellCcyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX__clientTrades_BrokerCurrencyTradeId",
-                table: "_clientTrades",
+                name: "IX_clientTrades_BrokerCurrencyTradeId",
+                table: "clientTrades",
                 column: "BrokerCurrencyTradeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX__clientTrades_BuyCcyId",
-                table: "_clientTrades",
+                name: "IX_clientTrades_BuyCcyId",
+                table: "clientTrades",
                 column: "BuyCcyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX__clientTrades_SellCcyId",
-                table: "_clientTrades",
+                name: "IX_clientTrades_SellCcyId",
+                table: "clientTrades",
                 column: "SellCcyId");
         }
 
@@ -123,13 +162,19 @@ namespace EasyTrade.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "_clientTrades");
+                name: "balances");
 
             migrationBuilder.DropTable(
-                name: "_brokerTrades");
+                name: "clientTrades");
 
             migrationBuilder.DropTable(
-                name: "_currencies");
+                name: "coefficients");
+
+            migrationBuilder.DropTable(
+                name: "brokerTrades");
+
+            migrationBuilder.DropTable(
+                name: "currencies");
         }
     }
 }
