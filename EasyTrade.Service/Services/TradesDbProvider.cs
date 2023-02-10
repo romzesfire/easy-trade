@@ -13,13 +13,13 @@ public class TradesDbProvider : ITradesProvider
     }
 
 
-    public IEnumerable<Trade> GetTrades(int limit, int offset)
+    public IEnumerable<CurrencyTrade> GetTrades(int limit, int offset)
     {
-        return _db.GetTrades(limit, offset);
+        return _db.GetTrades(limit, offset).Select(c=>(CurrencyTrade)c);
     }
 
-    public Trade GetTrade(uint id)
+    public CurrencyTrade GetTrade(uint id)
     {
-        return _db.GetTrade(id);
+        return (CurrencyTrade)_db.GetTrade(id);
     }
 }
