@@ -1,7 +1,12 @@
 using EasyTrade.DAL.Configuration;
+using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using BrokerCurrencyTrade = EasyTrade.DTO.Model.BrokerCurrencyTrade;
+using ClientCurrencyTrade = EasyTrade.DTO.Model.ClientCurrencyTrade;
+using Currency = EasyTrade.DTO.Model.Currency;
+using CurrencyTrade = EasyTrade.DTO.Model.CurrencyTrade;
 
 namespace EasyTrade.DAL.DatabaseContext;
 
@@ -13,64 +18,60 @@ public interface IEasyTradeDbContext
 
 public class EasyTradeDbContext : DbContext
 {
-    private DbSet<ClientCurrencyTrade> _clientTrades { get; set; } = null!;
-    private DbSet<BrokerCurrencyTrade> _brokerTrades { get; set; } = null!;
-    private DbSet<Currency> _currencies { get; set; } = null!;
+    private DbSet<ClientCurrencyTrade> clientTrades { get; set; } = null!;
+    private DbSet<BrokerCurrencyTrade> brokerTrades { get; set; } = null!;
+    private DbSet<Currency> currencies { get; set; } = null!;
+    private DbSet<TradeCoefficient> coefficients { get; set; } = null!;
+    private DbSet<Balance> balances { get; set; } = null!;
     public EasyTradeDbContext(DbContextOptions<EasyTradeDbContext> options) : base(options)
     {
         
     }
 
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     modelBuilder.Entity<ClientCurrencyTrade>().ToTable("client_trade");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.Id).HasColumnName("id");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.BuyAmount).HasColumnName("buyamount");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.SellAmount).HasColumnName("sellamount");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.BrokerCurrencyTradeId)
-    //         .HasColumnName("brokercurrencytradeid");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.BuyCcyId)
-    //         .HasColumnName("buyccyid");
-    //     modelBuilder.Entity<ClientCurrencyTrade>().Property(p => p.SellCcyId)
-    //         .HasColumnName("sellccyid");
-    //
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().ToTable("broker_trade");
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().Property(p => p.Id).HasColumnName("id");
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().Property(p => p.BuyAmount).HasColumnName("buyamount");
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().Property(p => p.SellAmount).HasColumnName("sellamount");
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().Property(p => p.BuyCcyId)
-    //         .HasColumnName("buyccyid");
-    //     modelBuilder.Entity<BrokerCurrencyTrade>().Property(p => p.SellCcyId)
-    //         .HasColumnName("sellccyid");
-    //     
-    //      modelBuilder.Entity<Currency>().ToTable("currency");
-    //     modelBuilder.Entity<Currency>().Property(p => p.Id).HasColumnName("id");
-    //     modelBuilder.Entity<Currency>().Property(p => p.Name).HasColumnName("name");
-    //     modelBuilder.Entity<Currency>().Property(p => p.IsoCode).HasColumnName("isocode");
-    //
-    // }
+
 
     public void AddTrade(ClientCurrencyTrade currencyTrade)
     {
-        _clientTrades.Add(currencyTrade);
+        clientTrades.Add(currencyTrade);
         SaveChanges();
     }
     public IEnumerable<Currency> GetCurrencies()
     {
-        return _currencies.ToList();
+        return currencies.ToList();
     }
 
     public List<ClientCurrencyTrade> GetTrades(int limit, int offset)
     {
-        return _clientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
+        return clientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList();
     }
 
-    public Trade GetTrade(uint id)
+    public ClientCurrencyTrade GetTrade(uint id)
     {
-        return _clientTrades.Where(t => t.Id == id).Include(t => t.BrokerCurrencyTrade)
+        return clientTrades.Where(t => t.Id == id)
+            .Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).First();
+    }
+
+    public IEnumerable<TradeCoefficient> GetCoefficients()
+    {
+        return coefficients.ToList();
+    }
+
+    public IEnumerable<Balance> GetBalances(int limit, int offset)
+    {
+        return balances.Skip(offset).Take(limit).Include(b => b.Currency).ToList();
+    }
+    
+    public Balance GetBalance(uint id)
+    {
+        return balances.Include(b => b.Currency).First(b => b.Id == id);
+    }
+    
+    public Balance GetBalance(string iso)
+    {
+        return balances.Include(b => b.Currency).First(b => b.Currency.IsoCode == iso);
     }
 }
