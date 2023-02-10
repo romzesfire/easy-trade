@@ -13,14 +13,12 @@ namespace EasyTrade.API.Controllers;
 public class ClientTradeController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
-    private EasyTradeDbContext _db;
     private IClientCurrencyTradeCreator _tradeCreator;
     public ITradesProvider _tradesProvider;
-    public ClientTradeController(ILogger<ClientTradeController> logger, EasyTradeDbContext dbContext, 
+    public ClientTradeController(ILogger<ClientTradeController> logger,
         IClientCurrencyTradeCreator tradeCreator, ITradesProvider tradesProvider)
     {
         _logger = logger;
-        _db = dbContext;
         _tradeCreator = tradeCreator;
         _tradesProvider = tradesProvider;
     }

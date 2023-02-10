@@ -1,4 +1,6 @@
 
+using System.Text.Json.Serialization;
+
 namespace EasyTrade.DTO.Model;
 
 public abstract class Trade //Datetime + timezone
@@ -10,6 +12,7 @@ public abstract class Trade //Datetime + timezone
 }
 public class CurrencyTrade : Trade 
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TradeType TradeType { get; set; }
     public Currency BuyCcy { get; set; }
     public Currency SellCcy { get; set; }

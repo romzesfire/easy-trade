@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="EasyTrade.DAL">
+        <HintPath>..\EasyTrade.API\bin\Debug\net7.0\EasyTrade.DAL.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
