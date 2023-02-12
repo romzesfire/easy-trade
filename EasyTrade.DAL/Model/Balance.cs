@@ -1,4 +1,4 @@
-namespace EasyTrade.DTO.Model;
+namespace EasyTrade.DAL.Model;
 
 public class Balance
 {

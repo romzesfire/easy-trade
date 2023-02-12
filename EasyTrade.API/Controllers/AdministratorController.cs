@@ -1,5 +1,6 @@
-using EasyTrade.DAL.Model;
+
 using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;

@@ -4,8 +4,6 @@ using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.Service.Exceptions;
-using ClientCurrencyTrade = EasyTrade.DTO.Model.ClientCurrencyTrade;
-using Currency = EasyTrade.DTO.Model.Currency;
 
 namespace EasyTrade.Service.Services;
 

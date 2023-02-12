@@ -13,4 +13,8 @@
       <PackageReference Include="Refit" Version="6.3.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\EasyTrade.DAL\EasyTrade.DAL.csproj" />
+    </ItemGroup>
+
 </Project>

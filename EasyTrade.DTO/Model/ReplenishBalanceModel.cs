@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Validation;
 
-namespace EasyTrade.DAL.Model;
+namespace EasyTrade.DTO.Model;
 
 public class ReplenishBalanceModel
 {

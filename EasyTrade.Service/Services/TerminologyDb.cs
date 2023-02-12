@@ -1,4 +1,5 @@
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 

@@ -1,10 +1,7 @@
 
-using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
-using EasyTrade.Service.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EasyTrade.API.Controllers;
 

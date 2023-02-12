@@ -1,12 +1,6 @@
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.Model;
-using EasyTrade.DTO.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using BrokerCurrencyTrade = EasyTrade.DTO.Model.BrokerCurrencyTrade;
-using ClientCurrencyTrade = EasyTrade.DTO.Model.ClientCurrencyTrade;
-using Currency = EasyTrade.DTO.Model.Currency;
-using CurrencyTrade = EasyTrade.DTO.Model.CurrencyTrade;
 
 namespace EasyTrade.DAL.DatabaseContext;
 

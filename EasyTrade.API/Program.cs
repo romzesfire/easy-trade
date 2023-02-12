@@ -27,6 +27,7 @@ builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<Quot
     .AddLocalCurrenciesProvider()
     .AddScoped<IBalanceProvider, BalanceDbProvider>()
     .AddScoped<ITradesProvider, TradesDbProvider>()
+    .AddScoped<IDataSaver, DataToDbSaver>()
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()

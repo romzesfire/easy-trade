@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyTrade.DAL.Migrations
 {
     [DbContext(typeof(EasyTradeDbContext))]
-    [Migration("20230210121034_InitialDbTrades")]
-    partial class InitialDbTrades
+    [Migration("20230212202225_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,26 +25,7 @@ namespace EasyTrade.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.TradeCoefficient", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<decimal>("Coefficient")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("Operation")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("coefficients");
-                });
-
-            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.Balance", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +46,7 @@ namespace EasyTrade.DAL.Migrations
                     b.ToTable("balances");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.BrokerCurrencyTrade", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,7 +81,7 @@ namespace EasyTrade.DAL.Migrations
                     b.ToTable("brokerTrades");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.ClientCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.ClientCurrencyTrade", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +121,7 @@ namespace EasyTrade.DAL.Migrations
                     b.ToTable("clientTrades");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.Currency", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.Currency", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,9 +142,28 @@ namespace EasyTrade.DAL.Migrations
                     b.ToTable("currencies");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.Balance", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.TradeCoefficient", b =>
                 {
-                    b.HasOne("EasyTrade.DTO.Model.Currency", "Currency")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Coefficient")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Operation")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("coefficients");
+                });
+
+            modelBuilder.Entity("EasyTrade.DAL.Model.Balance", b =>
+                {
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -172,15 +172,15 @@ namespace EasyTrade.DAL.Migrations
                     b.Navigation("Currency");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.BrokerCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.BrokerCurrencyTrade", b =>
                 {
-                    b.HasOne("EasyTrade.DTO.Model.Currency", "BuyCcy")
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "BuyCcy")
                         .WithMany()
                         .HasForeignKey("BuyCcyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DTO.Model.Currency", "SellCcy")
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "SellCcy")
                         .WithMany()
                         .HasForeignKey("SellCcyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -191,21 +191,21 @@ namespace EasyTrade.DAL.Migrations
                     b.Navigation("SellCcy");
                 });
 
-            modelBuilder.Entity("EasyTrade.DTO.Model.ClientCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.ClientCurrencyTrade", b =>
                 {
-                    b.HasOne("EasyTrade.DTO.Model.BrokerCurrencyTrade", "BrokerCurrencyTrade")
+                    b.HasOne("EasyTrade.DAL.Model.BrokerCurrencyTrade", "BrokerCurrencyTrade")
                         .WithMany()
                         .HasForeignKey("BrokerCurrencyTradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DTO.Model.Currency", "BuyCcy")
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "BuyCcy")
                         .WithMany()
                         .HasForeignKey("BuyCcyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DTO.Model.Currency", "SellCcy")
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "SellCcy")
                         .WithMany()
                         .HasForeignKey("SellCcyId")
                         .OnDelete(DeleteBehavior.Cascade)

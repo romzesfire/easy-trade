@@ -1,4 +1,3 @@
-using EasyTrade.DTO.Model;
 
 namespace EasyTrade.DAL.Model;
 
@@ -13,6 +12,7 @@ public class ClientCurrencyTrade : CurrencyTrade
     }
     public ClientCurrencyTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
     {
+        TradeType = brokerTrade.TradeType;
         BuyCcy = brokerTrade.BuyCcy;
         SellCcy = brokerTrade.SellCcy;
         BuyAmount = buyAmount;

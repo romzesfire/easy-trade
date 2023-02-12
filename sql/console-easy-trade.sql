@@ -27,7 +27,7 @@ CREATE TABLE currency(
 );
 
 SELECT * FROM currencies;
-SELECT * FROM brokerTrades;
+SELECT * FROM "brokerTrades";
 
 SELECT * FROM balances;
 
