@@ -1,6 +1,6 @@
 using EasyTrade.DTO.Model;
 
-namespace EasyTrade.Service.Abstractions;
+namespace EasyTrade.DTO.Abstractions;
 
 public interface ITerminologyApi
 {

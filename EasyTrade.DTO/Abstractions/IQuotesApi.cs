@@ -1,7 +1,7 @@
 using EasyTrade.Service.Model;
 using Refit;
 
-namespace EasyTrade.Service.Abstractions;
+namespace EasyTrade.DTO.Abstractions;
 
 public interface IQuotesApi
 {
