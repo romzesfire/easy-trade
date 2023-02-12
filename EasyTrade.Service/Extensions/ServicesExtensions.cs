@@ -2,7 +2,6 @@ using System.Net.Http.Headers;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DTO.Abstractions;
-using EasyTrade.Service.Abstractions;
 using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Services;
 using Microsoft.EntityFrameworkCore;

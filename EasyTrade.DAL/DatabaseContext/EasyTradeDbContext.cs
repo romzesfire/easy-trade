@@ -28,12 +28,9 @@ public class EasyTradeDbContext : DbContext
         
     }
 
-
-
     public void AddTrade(ClientCurrencyTrade currencyTrade)
     {
         clientTrades.Add(currencyTrade);
-        SaveChanges();
     }
     public IEnumerable<Currency> GetCurrencies()
     {
