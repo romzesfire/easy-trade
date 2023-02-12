@@ -52,23 +52,11 @@ public class ClientTradeController : ControllerBase
     }
     
     [HttpGet("Trades/{id}")]
-    public IActionResult GetBalance(uint id)
+    public IActionResult GetTrade(uint id)
     {
         var trade = _tradesProvider.GetTrade(id);
         return Ok(trade);
     }
-    
-    // [HttpGet("Balance")]
-    // public IActionResult GetBalance(string ccy)
-    // {
-    //     return Ok();
-    // }
-    //
-    // [HttpGet]
-    // public IActionResult GetBalance(string ccy)
-    // {
-    //     return Ok();
-    // }
     
     [HttpPost("Withdraw")]
     public IActionResult WithdrawToCard(string ccy, decimal amount,  

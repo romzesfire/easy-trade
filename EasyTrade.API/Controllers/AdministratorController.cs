@@ -1,3 +1,5 @@
+using EasyTrade.DAL.Model;
+using EasyTrade.DTO.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
@@ -7,15 +9,21 @@ namespace EasyTrade.API.Controllers;
 public class AdministratorController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
-
-    public AdministratorController(ILogger<ClientTradeController> logger)
+    private IBalanceProvider _balanceProvider;
+    private IDataSaver _dataSaver;
+    public AdministratorController(ILogger<ClientTradeController> logger, IBalanceProvider balanceProvider, 
+        IDataSaver dataSaver)
     {
         _logger = logger;
+        _balanceProvider = balanceProvider;
+        _dataSaver = dataSaver;
     }
     
     [HttpPost("ReplenishBalance")]
-    public IActionResult ReplenishBalance(string ccy, decimal amount)
+    public IActionResult ReplenishBalance(ReplenishBalanceModel balanceModel)
     {
+        _balanceProvider.GetBalance(balanceModel.IsoCode).Amount += balanceModel.Amount;
+        _dataSaver.Save();
         return Ok();
     }
 

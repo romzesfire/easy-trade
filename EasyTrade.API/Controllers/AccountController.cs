@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ public class AccountController : ControllerBase
     // }
     
     [HttpGet("Balances/{isoCode}")]
-    public IActionResult GetBalanceByCode(string isoCode)
+    public IActionResult GetBalanceByCode([MaxLength(3)]string isoCode)
     {
         var balance = _balanceProvider.GetBalance(isoCode);
         return Ok(balance);
