@@ -1,6 +1,6 @@
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
-using EasyTrade.Service.Abstractions;
 
 namespace EasyTrade.Service.Services;
 
