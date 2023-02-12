@@ -32,7 +32,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         (var buyCcy, var sellCcy) = ValidateCurrencies(tradeModel);
         var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var c = _coefficientProvider.GetCoefficient(TradeOperation.CurrencyTrade);
+        var c = _coefficientProvider.GetCoefficient(TradeOperation.CurrencyTrade).Coefficient;
 
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;

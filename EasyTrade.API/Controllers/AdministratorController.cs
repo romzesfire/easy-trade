@@ -12,12 +12,14 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<ClientTradeController> _logger;
     private IBalanceProvider _balanceProvider;
     private IDataSaver _dataSaver;
+    private ICoefficientProvider _coefficientProvider;
     public AdministratorController(ILogger<ClientTradeController> logger, IBalanceProvider balanceProvider, 
-        IDataSaver dataSaver)
+        IDataSaver dataSaver, ICoefficientProvider coefficientProvider)
     {
         _logger = logger;
         _balanceProvider = balanceProvider;
         _dataSaver = dataSaver;
+        _coefficientProvider = coefficientProvider;
     }
     
     [HttpPost("ReplenishBalance")]
@@ -28,9 +30,12 @@ public class AdministratorController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("RefreshCoefficient")]
-    public IActionResult RefreshCoefficient(decimal coefficient)
+    [HttpPost("UpdateCoefficient")]
+    public IActionResult UpdateCoefficient(UpdateCoefficientModel updateCoefficientModel)
     {
+        var coefficient = _coefficientProvider.GetCoefficient(updateCoefficientModel.Operation);
+        coefficient.Coefficient = updateCoefficientModel.Coefficient;
+        _dataSaver.Save();
         return Ok();
     }
 }

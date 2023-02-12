@@ -12,8 +12,8 @@ public class CoefficientsDbProvider : ICoefficientProvider
     {
         _db = db;
     }
-    public decimal GetCoefficient(TradeOperation operation)
+    public TradeCoefficient GetCoefficient(TradeOperation operation)
     {
-        return _db.GetCoefficients().FirstOrDefault(c => c.Operation == operation).Coefficient;
+        return _db.GetCoefficients().FirstOrDefault(c => c.Operation == operation);
     }
 }
