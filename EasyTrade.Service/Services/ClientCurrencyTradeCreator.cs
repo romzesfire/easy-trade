@@ -15,14 +15,17 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     private ICoefficientProvider _coefficientProvider;
     private EasyTradeDbContext _db;
     private IBalanceProvider _balanceProvider;
-     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
+    private IDataSaver _saver;
+
+    public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
         ICoefficientProvider coefficientProvider, EasyTradeDbContext dbContext,
-        IBalanceProvider balanceProvider)
+        IBalanceProvider balanceProvider, IDataSaver saver)
     {
         _brokerTradeCreator = brokerTradeCreator;
         _coefficientProvider = coefficientProvider;
         _db = dbContext;
         _balanceProvider = balanceProvider;
+        _saver = saver;
     }
     
     public void Create(TradeCreationModel tradeModel)
@@ -52,12 +55,13 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var clientTrade = new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
 
         _db.AddTrade(clientTrade);
+        _saver.Save();
     }
 
     private void CalculateBalances(Balance buyBalance, Balance sellBalance, decimal buyAmount, decimal sellAmount)
     {
         if (sellAmount > sellBalance.Amount)
-            throw new NotEnoughMoneyException(sellBalance.Currency.IsoCode);
+            throw new NotEnoughAssetsException(sellBalance.Currency.IsoCode);
         
         buyBalance.Amount += buyAmount;
         sellBalance.Amount -= sellAmount;
