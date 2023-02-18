@@ -7,9 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="EasyTrade.DAL">
-        <HintPath>..\EasyTrade.API\bin\Debug\net7.0\EasyTrade.DAL.dll</HintPath>
-      </Reference>
       <PackageReference Include="Refit" Version="6.3.2" />
     </ItemGroup>
 
