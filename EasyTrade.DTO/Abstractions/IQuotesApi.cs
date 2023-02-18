@@ -1,4 +1,5 @@
-using EasyTrade.Service.Model;
+
+using EasyTrade.Service.Model.ResponseModels;
 using Refit;
 
 namespace EasyTrade.DTO.Abstractions;

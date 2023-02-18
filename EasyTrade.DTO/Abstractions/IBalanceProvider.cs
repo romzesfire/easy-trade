@@ -1,10 +1,11 @@
 using EasyTrade.DAL.Model;
+using EasyTrade.Service.Model.ResponseModels;
 
 namespace EasyTrade.DTO.Abstractions;
 
 public interface IBalanceProvider
 {
-    public Balance GetBalance(string currencyIsoCode);
-    public Balance GetBalance(uint id);
-    public IEnumerable<Balance> GetBalances(int limit, int offset);
+    public BalanceResponse GetBalance(string currencyIsoCode);
+    public BalanceResponse GetOperation(int id);
+    public IEnumerable<BalanceResponse> GetOperations(int limit, int offset);
 }
