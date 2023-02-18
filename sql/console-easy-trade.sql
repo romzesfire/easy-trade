@@ -26,12 +26,23 @@ CREATE TABLE currency(
     IsoCode CHAR(3) UNIQUE
 );
 
+CREATE TABLE coefficients(
+    "Id" SERIAL PRIMARY KEY,
+    "DateTime" DATE,
+    "Coefficient" DECIMAL
+--     "FirstCcyId" INTEGER,
+--     "SecondCcyId" INTEGER,
+--     FOREIGN KEY ("FirstCcyId") REFERENCES currencies("Id"),
+--     FOREIGN KEY ("SecondCcyId") REFERENCES currencies("Id")
+);
+
+
 SELECT * FROM currencies;
 SELECT * FROM "brokerTrades";
 
-SELECT * FROM balances;
+SELECT * FROM coefficients;
 
-DROP TABLE currencies;
+DROP TABLE coefficients;
 DROP TABLE "brokerTrades";
 DROP TABLE "clientTrades";
 DROP TABLE balances;
@@ -48,7 +59,7 @@ INSERT INTO currencies ("Name", "IsoCode") VALUES ('Australian dollar', 'AUD');
 INSERT INTO currencies ("Name", "IsoCode") VALUES ('Dollar canadien', 'CAD');
 INSERT INTO currencies ("Name", "IsoCode") VALUES ('Swiss franc', 'CHF');
 INSERT INTO currencies ("Name", "IsoCode") VALUES ('Yuan', 'CNH');
-INSERT INTO coefficients ("Operation", "Coefficient") VALUES (0, 1.2);
+INSERT INTO coefficients ("CurrencyId", "Coefficient") VALUES (0, 1.2);
 
 
 INSERT INTO balances ("CurrencyId", "Amount") VALUES (1, 10000000);
