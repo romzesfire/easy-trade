@@ -11,13 +11,13 @@ public class ClientTradeController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
     private IClientCurrencyTradeCreator _tradeCreator;
-    public ITradesProvider _tradesProvider;
+    public ICurrencyTradesProvider CurrencyTradesProvider;
     public ClientTradeController(ILogger<ClientTradeController> logger,
-        IClientCurrencyTradeCreator tradeCreator, ITradesProvider tradesProvider)
+        IClientCurrencyTradeCreator tradeCreator, ICurrencyTradesProvider currencyTradesProvider)
     {
         _logger = logger;
         _tradeCreator = tradeCreator;
-        _tradesProvider = tradesProvider;
+        CurrencyTradesProvider = currencyTradesProvider;
     }
     //ДТО зависит от DAL это ок?
     //2 Get метода
@@ -44,14 +44,14 @@ public class ClientTradeController : ControllerBase
     [HttpGet("Trades")]
     public IActionResult GetTrades(int limit = 20, int offset = 0)
     {
-        var trades = _tradesProvider.GetTrades(limit, offset);
+        var trades = CurrencyTradesProvider.GetTrades(limit, offset);
         return Ok(trades);
     }
     
     [HttpGet("Trades/{id}")]
     public IActionResult GetTrade(uint id)
     {
-        var trade = _tradesProvider.GetTrade(id);
+        var trade = CurrencyTradesProvider.GetTrade(id);
         return Ok(trade);
     }
     

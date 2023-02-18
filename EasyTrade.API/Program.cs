@@ -28,13 +28,12 @@ var dd = options.Options;
 builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
     .AddLocalCurrenciesProvider()
     .AddScoped<IBalanceProvider, BalanceDbProvider>()
-    .AddScoped<ITradesProvider, TradesDbProvider>()
+    .AddScoped<ICurrencyTradesProvider, CurrencyTradesDbProvider>()
     .AddScoped<IDataSaver, DataToDbSaver>()
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
-    .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
-    .AddScoped<ICoefficientProvider, CoefficientsDbProvider>();
+    .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>();
 
 var app = builder.Build();
 
