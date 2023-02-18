@@ -14,16 +14,16 @@ public class CurrencyRepository : IRepository<Currency, string>
 
     public IEnumerable<Currency> GetAll()
     {
-        return _db.currencies.ToList();
+        return _db.Currencies.ToList();
     }
 
     public IEnumerable<Currency> GetLimited(int limit, int offset)
     {
-        return _db.currencies.Skip(offset).Take(limit).ToList();
+        return _db.Currencies.Skip(offset).Take(limit).ToList();
     }
 
     public Currency Get(string id)
     {
-        return _db.currencies.First(c=>c.IsoCode == id);
+        return _db.Currencies.First(c=>c.IsoCode == id);
     }
 }

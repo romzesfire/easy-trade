@@ -11,20 +11,20 @@ namespace EasyTrade.Service.Services;
 public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
 {
     private IBrokerCurrencyTradeCreator _brokerTradeCreator;
-    private ICoefficientProvider _coefficientProvider;
     private EasyTradeDbContext _db;
-    private IDataSaver _saver;
-    private IRepository<Currency, int> _currencyRepository;
+    private IRepository<Currency, string> _currencyRepository;
+    private IRepository<Balance, string> _balanceRepository;
+    private IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
-        ICoefficientProvider coefficientProvider, EasyTradeDbContext dbContext,
-        IRepository<Currency, int> currencyRepository,
-        IBalanceProvider balanceProvider, IDataSaver saver)
+        EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
+        IRepository<Balance, string> balanceRepository,
+        IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository)
     {
         _brokerTradeCreator = brokerTradeCreator;
-        _coefficientProvider = coefficientProvider;
+        _coefficientRepository = coefficientRepository;
         _db = dbContext;
         _currencyRepository = currencyRepository;
-        _saver = saver;
+        _balanceRepository = balanceRepository;
     }
     
     public void Create(TradeCreationModel tradeModel)
@@ -35,9 +35,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var sellCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.SellCurrency);
         
         ValidateCurrencies(buyCcy, sellCcy);
+        
         var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var c = _coefficientProvider.GetCoefficient(TradeOperation.CurrencyTrade).Coefficient;
+        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
 
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
@@ -50,13 +51,32 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         {
             buyAmount /= c;
         }
-
+        ValidateBalance(sellCcy, sellAmount);
+        var sellOperation = new Balance()
+        {
+            Currency = sellCcy,
+            Amount = (-1) * sellAmount,
+            DateTime = tradeModel.DateTime
+        };
+        var buyOperation = new Balance()
+        {
+            Currency = buyCcy,
+            Amount = buyAmount,
+            DateTime = tradeModel.DateTime
+        };
+        
         var clientTrade = new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
-
+        _db.Balances.AddRange(buyOperation, sellOperation);
         _db.AddTrade(clientTrade);
-        _saver.Save();
+        _db.SaveChanges();
     }
 
+    private void ValidateBalance(Currency sellCcy, decimal sellAmount)
+    {
+        var balance = _balanceRepository.Get(sellCcy.IsoCode);
+        if (balance.Amount < sellAmount)
+            throw new NotEnoughAssetsException(sellCcy.IsoCode);
+    }
 
 
     private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy)

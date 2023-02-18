@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.Model;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,24 @@ public interface IEasyTradeDbContext
 
 public class EasyTradeDbContext : DbContext
 {
-    internal DbSet<ClientCurrencyTrade> clientTrades { get; set; } = null!;
-    internal DbSet<BrokerCurrencyTrade> brokerTrades { get; set; } = null!;
-    internal DbSet<Currency> currencies { get; set; } = null!;
-    internal DbSet<CurrencyTradeCoefficient> coefficients { get; set; } = null!;
-    internal DbSet<Balance> balances { get; set; } = null!;
+    public DbSet<ClientCurrencyTrade> ClientTrades { get; set; } = null!;
+
+    public DbSet<BrokerCurrencyTrade> BrokerTrades { get; set; } = null!;
+
+    public DbSet<Currency> Currencies { get; set; } = null!;
+
+    public DbSet<CurrencyTradeCoefficient> Coefficients { get; set; } = null!;
+
+    public DbSet<Balance> Balances { get; set; } = null!;
+
     public EasyTradeDbContext(DbContextOptions<EasyTradeDbContext> options) : base(options)
     {
-        
-    }
-    public void AddTrade(ClientCurrencyTrade currencyTrade)
-    {
-        clientTrades.Add(currencyTrade);
+
     }
 
+
+    public void AddTrade(ClientCurrencyTrade currencyTrade)
+    {
+        ClientTrades.Add(currencyTrade);
+    }
 }

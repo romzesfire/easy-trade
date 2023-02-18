@@ -10,4 +10,11 @@ public class UpdateCoefficientModel
     [EnumDataType(typeof(TradeOperation))]
     public TradeOperation Operation { get; set; }
     public decimal Coefficient { get; set; }
+    public DateTimeOffset DateTime { get; set; }
+}
+
+public class UpdateCurrencyTradeCoefficientModel : UpdateCoefficientModel
+{
+    public string FirstIsoCode { get; set; }
+    public string SecondIsoCode { get; set; }
 }

@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.DAL.Extension;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Extensions;
@@ -29,7 +30,6 @@ builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<Quot
     .AddLocalCurrenciesProvider()
     .AddScoped<IBalanceProvider, BalanceDbProvider>()
     .AddScoped<ICurrencyTradesProvider, CurrencyTradesDbProvider>()
-    .AddScoped<IDataSaver, DataToDbSaver>()
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()

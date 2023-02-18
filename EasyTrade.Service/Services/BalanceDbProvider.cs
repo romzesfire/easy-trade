@@ -8,8 +8,8 @@ namespace EasyTrade.Service.Services;
 
 public class BalanceDbProvider : IBalanceProvider
 {
-    private IRepository<Balance, int> _balanceRepository;
-    public BalanceDbProvider(IRepository<Balance, int> balanceRepository)
+    private IRepository<Balance, string> _balanceRepository;
+    public BalanceDbProvider(IRepository<Balance, string> balanceRepository)
     {
         _balanceRepository = balanceRepository;
     }
@@ -25,7 +25,7 @@ public class BalanceDbProvider : IBalanceProvider
 
     public BalanceResponse GetOperation(int id)
     {
-        return (BalanceResponse)_balanceRepository.Get(id);
+        return (BalanceResponse)_balanceRepository.GetAll().First(b=>b.Id == id);
     }
 
     public IEnumerable<BalanceResponse> GetOperations(int limit, int offset)

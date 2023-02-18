@@ -15,7 +15,7 @@ public static class DalExtensions
         {
             o.UseNpgsql(connectionString);
         })
-            .AddScoped<IRepository<Balance, int>, BalanceRepository>()
+            .AddScoped<IRepository<Balance, string>, BalanceRepository>()
             .AddScoped<IRepository<Currency, string>, CurrencyRepository>()
             .AddScoped<IRepository<CurrencyTradeCoefficient, (string?, string?)>,
                 CurrencyTradeCoefficientRepository>()

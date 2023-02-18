@@ -3,7 +3,7 @@ using EasyTrade.DTO.Validation;
 
 namespace EasyTrade.DTO.Model;
 
-public class ReplenishBalanceModel
+public class UpdateBalanceModel
 {
     [MaxLength(3)]
     [MinLength(3)]
@@ -13,4 +13,6 @@ public class ReplenishBalanceModel
     [Required]
     [GreaterThanZero]
     public decimal Amount { get; set; }
+    [Required]
+    public DateTimeOffset DateTime { get; set; }
 }

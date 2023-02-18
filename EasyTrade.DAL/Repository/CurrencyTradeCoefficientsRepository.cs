@@ -15,7 +15,7 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
 
     public IEnumerable<CurrencyTradeCoefficient> GetAll()
     {
-        return _db.coefficients
+        return _db.Coefficients
             .Include(c=>c.FirstCcy)
             .Include(c=>c.SecondCcy)
             .ToList();
@@ -23,7 +23,7 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
 
     public IEnumerable<CurrencyTradeCoefficient> GetLimited(int limit, int offset)
     {
-        return _db.coefficients.Skip(offset).Take(limit)
+        return _db.Coefficients.Skip(offset).Take(limit)
             .Include(c=>c.FirstCcy)
             .Include(c=>c.SecondCcy)
             .ToList();
@@ -31,11 +31,19 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
 
     public CurrencyTradeCoefficient Get((string?, string?) id)
     {
-        return _db.coefficients.Include(c => c.FirstCcy)
+        var c = _db.Coefficients.Include(c => c.FirstCcy)
             .Include(c => c.SecondCcy)
-            .First(c 
+            .Where(c 
                 => (id.Item2 == null && id.Item1 == null && c.FirstCcy == null && c.SecondCcy == null) ||
                    (c.FirstCcy.IsoCode == id.Item1 && c.SecondCcy.IsoCode == id.Item2) ||
-                   (c.FirstCcy.IsoCode == id.Item2 && c.SecondCcy.IsoCode == id.Item1));
+                   (c.FirstCcy.IsoCode == id.Item2 && c.SecondCcy.IsoCode == id.Item1))
+            .OrderByDescending(c=>c.DateTime).FirstOrDefault();
+        if (c == null)
+            return _db.Coefficients.Include(c => c.FirstCcy)
+                .Include(c => c.SecondCcy)
+                .Where(c
+                    => c.FirstCcy == null && c.SecondCcy == null)
+                .OrderByDescending(c=>c.DateTime).First();
+        return c;
     }
 }

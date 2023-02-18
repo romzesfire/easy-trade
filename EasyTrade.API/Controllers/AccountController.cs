@@ -15,10 +15,10 @@ public class AccountController : ControllerBase
         _balanceProvider = balanceProvider;
     }
     
-    [HttpGet("Balances")]
-    public IActionResult GetBalances(int limit = 20, int offset = 0)
+    [HttpGet("Operations")]
+    public IActionResult GetOperations(int limit = 20, int offset = 0)
     {
-        var balances = _balanceProvider.GetBalances(limit, offset);
+        var balances = _balanceProvider.GetOperations(limit, offset);
         return Ok(balances);
     }
     

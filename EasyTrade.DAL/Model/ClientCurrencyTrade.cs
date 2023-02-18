@@ -1,5 +1,8 @@
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace EasyTrade.DAL.Model;
+
 
 public class ClientCurrencyTrade : CurrencyTrade
 {

@@ -15,21 +15,21 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
 
     public IEnumerable<ClientCurrencyTrade> GetAll()
     {
-        return _db.clientTrades.Include(t => t.BrokerCurrencyTrade)
+        return _db.ClientTrades.Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList();
     }
 
     public IEnumerable<ClientCurrencyTrade> GetLimited(int limit, int offset)
     {
-        return _db.clientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
+        return _db.ClientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList();
     }
 
     public ClientCurrencyTrade Get(int id)
     {
-        return _db.clientTrades.Where(t => t.Id == id)
+        return _db.ClientTrades.Where(t => t.Id == id)
             .Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).First();
