@@ -1,8 +1,9 @@
-using System.Net.Http.Headers;
-using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.DAL.Repository;
 using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model.Repository;
 using EasyTrade.Service.Configuration;
+using EasyTrade.Service.Model.ResponseModels;
 using EasyTrade.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,13 +32,5 @@ public static class ServicesExtensions
         return services;
     }
 
-    public static IServiceCollection AddDbServices(this IServiceCollection services, string connectionString)
-    {
-        services.AddDbContextPool<EasyTradeDbContext>(o =>
-            {
-                o.UseNpgsql(connectionString);
-            });
-        
-        return services;
-    }
+
 }
