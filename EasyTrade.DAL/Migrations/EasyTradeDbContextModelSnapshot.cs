@@ -36,6 +36,9 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<long>("CurrencyId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTimeOffset>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
@@ -139,7 +142,7 @@ namespace EasyTrade.DAL.Migrations
                     b.ToTable("currencies");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.TradeCoefficient", b =>
+            modelBuilder.Entity("EasyTrade.DAL.Model.CurrencyTradeCoefficient", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,10 +153,20 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("Coefficient")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("Operation")
-                        .HasColumnType("integer");
+                    b.Property<DateTimeOffset>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("FirstCcyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("SecondCcyId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FirstCcyId");
+
+                    b.HasIndex("SecondCcyId");
 
                     b.ToTable("coefficients");
                 });
@@ -213,6 +226,21 @@ namespace EasyTrade.DAL.Migrations
                     b.Navigation("BuyCcy");
 
                     b.Navigation("SellCcy");
+                });
+
+            modelBuilder.Entity("EasyTrade.DAL.Model.CurrencyTradeCoefficient", b =>
+                {
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "FirstCcy")
+                        .WithMany()
+                        .HasForeignKey("FirstCcyId");
+
+                    b.HasOne("EasyTrade.DAL.Model.Currency", "SecondCcy")
+                        .WithMany()
+                        .HasForeignKey("SecondCcyId");
+
+                    b.Navigation("FirstCcy");
+
+                    b.Navigation("SecondCcy");
                 });
 #pragma warning restore 612, 618
         }
