@@ -1,29 +1,35 @@
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model.Repository;
+using EasyTrade.Service.Model.ResponseModels;
 
 namespace EasyTrade.Service.Services;
 
 public class BalanceDbProvider : IBalanceProvider
 {
-    private EasyTradeDbContext _db;
-    
-    public BalanceDbProvider(EasyTradeDbContext db)
+    private IRepository<Balance, int> _balanceRepository;
+    public BalanceDbProvider(IRepository<Balance, int> balanceRepository)
     {
-        _db = db;
-    }
-    public Balance GetBalance(string currencyIsoCode)
-    {
-        return _db.GetBalance(currencyIsoCode);
+        _balanceRepository = balanceRepository;
     }
 
-    public Balance GetBalance(uint id)
+    public BalanceResponse GetBalance(string currencyIsoCode)
     {
-        return _db.GetBalance(id);
+        var balanceAmount = _balanceRepository.GetAll()
+            .Where(b => b.Currency.IsoCode == currencyIsoCode).Sum(b=>b.Amount);
+        var balance = (BalanceResponse)_balanceRepository.GetAll().Last();
+        balance.Amount = balanceAmount;
+        return balance;
     }
 
-    public IEnumerable<Balance> GetBalances(int limit, int offset)
+    public BalanceResponse GetOperation(int id)
     {
-        return _db.GetBalances(limit, offset);
+        return (BalanceResponse)_balanceRepository.Get(id);
+    }
+
+    public IEnumerable<BalanceResponse> GetOperations(int limit, int offset)
+    {
+        return _balanceRepository.GetLimited(limit, offset).Select(b=>(BalanceResponse)b);
     }
 }
