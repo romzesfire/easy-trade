@@ -55,7 +55,6 @@ DROP TABLE "Coefficients";
 DROP TABLE "BrokerTrades";
 DROP TABLE "ClientTrades";
 DROP TABLE "Balances";
-DELETE FROM "Coefficients" WHERE "Id"= cast(1 as bigint);
 INSERT INTO broker_trade(BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (10, 600, 2, 1);
 INSERT INTO client_trade(BrokerCurrencyTradeId, BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (2, 10, 600, 2, 1);
 
