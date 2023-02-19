@@ -11,28 +11,26 @@ public class BrokerCurrencyTradeCreator : IBrokerCurrencyTradeCreator
     private IQuotesProvider _quotesProvider;
     private ICurrenciesProvider _currenciesProvider;
     
-    public BrokerCurrencyTradeCreator(IQuotesProvider quotesProvider, ICurrenciesProvider currenciesProvider)
+    public BrokerCurrencyTradeCreator(IQuotesProvider quotesProvider)
     {
         _quotesProvider = quotesProvider;
-        _currenciesProvider = currenciesProvider;
     }
     
-    public BrokerCurrencyTrade Create(TradeCreationModel tradeModel, Currency buyCcy, Currency sellCcy)
+    public BrokerCurrencyTrade Create(BuyTradeCreationModel tradeModel, Currency buyCcy, Currency sellCcy)
     {
         var quote = _quotesProvider.Get(tradeModel.SellCurrency, tradeModel.BuyCurrency);
-        if (tradeModel is BuyTradeCreationModel buyTradeModel)
-        {
-            var sellAmount = buyTradeModel.BuyCount / quote.Price;
-            return new BrokerCurrencyTrade(buyCcy, sellCcy, 
-                buyTradeModel.BuyCount, sellAmount, buyTradeModel.DateTime, TradeType.Buy);
-        }
+        var sellAmount = tradeModel.BuyCount / quote.Price;
+        
+        return new BrokerCurrencyTrade(buyCcy, sellCcy, 
+                tradeModel.BuyCount, sellAmount, tradeModel.DateTime, TradeType.Buy);
+    }
 
-        if (tradeModel is SellTradeCreationModel sellTradeModel)
-        {
-            var buyAmount = sellTradeModel.SellCount * quote.Price;
-            return new BrokerCurrencyTrade(buyCcy, sellCcy,  
-                buyAmount, sellTradeModel.SellCount, sellTradeModel.DateTime, TradeType.Sell);
-        }
-        throw new NotImplementedException();
+    public BrokerCurrencyTrade Create(SellTradeCreationModel tradeModel, Currency buyCcy, Currency sellCcy)
+    {
+        var quote = _quotesProvider.Get(tradeModel.SellCurrency, tradeModel.BuyCurrency);
+
+        var buyAmount = tradeModel.SellCount * quote.Price;
+        return new BrokerCurrencyTrade(buyCcy, sellCcy,  
+                buyAmount, tradeModel.SellCount, tradeModel.DateTime, TradeType.Sell);
     }
 }

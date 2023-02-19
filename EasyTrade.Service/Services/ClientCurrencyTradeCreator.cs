@@ -26,31 +26,70 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         _currencyRepository = currencyRepository;
         _balanceRepository = balanceRepository;
     }
+
+    public void Create(BuyTradeCreationModel tradeModel)
+    {
+        (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
+        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
+        var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
+        
+        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
+        var buyAmount = brokerTrade.BuyAmount;
+        var sellAmount = brokerTrade.SellAmount;
+        sellAmount *= c;
+        
+        AddBalances(sellCcy, sellAmount, buyCcy, buyAmount, tradeModel);
+        CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+    }
     
-    public void Create(TradeCreationModel tradeModel)
+    public void Create(SellTradeCreationModel tradeModel)
+    {
+        (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
+        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
+        var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
+        
+        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
+        var buyAmount = brokerTrade.BuyAmount;
+        var sellAmount = brokerTrade.SellAmount;
+        buyAmount /= c;
+        
+        AddBalances(sellCcy, sellAmount, buyCcy, buyAmount, tradeModel);
+        CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+    }
+
+    private (Currency?, Currency?) GetCurrencies(TradeCreationModel tradeModel)
     {
         var currencies = _currencyRepository.GetAll();
         
         var buyCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.BuyCurrency);
         var sellCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.SellCurrency);
-        
-        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
-        
-        var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
-        
-        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
 
-        var buyAmount = brokerTrade.BuyAmount;
-        var sellAmount = brokerTrade.SellAmount;
-        if (tradeModel is BuyTradeCreationModel buyModel)
+        return (buyCcy, sellCcy);
+    }
+    
+    private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy, TradeCreationModel creationModel)
+    {
+        if (buyCcy == null)
         {
-            sellAmount *= c;
+            throw new CurrencyNotFoundException(creationModel.BuyCurrency);
         }
 
-        if (tradeModel is SellTradeCreationModel sellModel)
+        if (sellCcy == null)
         {
-            buyAmount /= c;
+            throw new CurrencyNotFoundException(creationModel.SellCurrency);
         }
+    }
+    
+    private void ValidateBalance(Currency sellCcy, decimal sellAmount)
+    {
+        var balance = _balanceRepository.Get(sellCcy.IsoCode);
+        if (balance.Amount < sellAmount)
+            throw new NotEnoughAssetsException(sellCcy.IsoCode);
+    }
+    
+    private void AddBalances(Currency sellCcy, decimal sellAmount, Currency buyCcy, decimal buyAmount,
+        TradeCreationModel tradeModel)
+    {
         ValidateBalance(sellCcy, sellAmount);
         var sellOperation = new Balance()
         {
@@ -64,31 +103,15 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
             Amount = buyAmount,
             DateTime = tradeModel.DateTime
         };
-        
-        var clientTrade = new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
         _db.Balances.AddRange(buyOperation, sellOperation);
+    }
+    
+    private void CreateClientTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
+    {
+        var clientTrade = new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
+
         _db.AddTrade(clientTrade);
         _db.SaveChanges();
     }
 
-    private void ValidateBalance(Currency sellCcy, decimal sellAmount)
-    {
-        var balance = _balanceRepository.Get(sellCcy.IsoCode);
-        if (balance.Amount < sellAmount)
-            throw new NotEnoughAssetsException(sellCcy.IsoCode);
-    }
-
-
-    private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy, TradeCreationModel creationModel)
-    {
-        if (buyCcy == null)
-        {
-            throw new CurrencyNotFoundException(creationModel.BuyCurrency);
-        }
-
-        if (sellCcy == null)
-        {
-            throw new CurrencyNotFoundException(creationModel.SellCurrency);
-        }
-    }
 }
