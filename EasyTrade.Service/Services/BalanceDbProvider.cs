@@ -16,11 +16,9 @@ public class BalanceDbProvider : IBalanceProvider
 
     public BalanceResponse GetBalance(string currencyIsoCode)
     {
-        var balanceAmount = _balanceRepository.GetAll()
-            .Where(b => b.Currency.IsoCode == currencyIsoCode).Sum(b=>b.Amount);
-        var balance = (BalanceResponse)_balanceRepository.GetAll().Last();
-        balance.Amount = balanceAmount;
-        return balance;
+        var balance = _balanceRepository.Get(currencyIsoCode);
+        var balanceResponse = (BalanceResponse)balance;
+        return balanceResponse;
     }
 
     public BalanceResponse GetOperation(int id)

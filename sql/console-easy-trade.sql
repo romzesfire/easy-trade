@@ -69,6 +69,7 @@ INSERT INTO "Currencies" ("Name", "IsoCode") VALUES ('Dollar canadien', 'CAD');
 INSERT INTO "Currencies" ("Name", "IsoCode") VALUES ('Swiss franc', 'CHF');
 INSERT INTO "Currencies" ("Name", "IsoCode") VALUES ('Yuan', 'CNH');
 INSERT INTO "Coefficients" ("Coefficient", "DateTime") VALUES (1.2, now());
+INSERT INTO "Coefficients" ("Coefficient", "DateTime", "FirstCcyId", "SecondCcyId") VALUES (2.5, now(), 1, 2);
 
 
 INSERT INTO "Balances" ("CurrencyId", "Amount", "DateTime") VALUES (1, 10000000, now());

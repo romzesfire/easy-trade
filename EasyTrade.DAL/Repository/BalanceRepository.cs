@@ -30,9 +30,11 @@ public class BalanceRepository : IRepository<Balance, string>
     {
         var operations = _db.Balances.Include(b => b.Currency)
             .Where(b => b.Currency.IsoCode == id);
-        var balanceAmount = operations.Sum(o => o.Amount);
+        
         var lastDate = operations.Max(o => o.DateTime);
         var lastOperation = operations.First(b=>b.DateTime == lastDate);
+        var operationsList = operations.ToList();
+        var balanceAmount = operationsList.Sum(o => o.Amount);
         var balance = new Balance()
         {
             Amount = balanceAmount,
