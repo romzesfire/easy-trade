@@ -1,7 +1,7 @@
 using System.Net;
 using EasyTrade.Service.Exceptions;
 
-namespace EasyTrade.API.Middleware;
+namespace EasyTrade.API.Validation;
 
 public class ValidationOptionsProvider : IValidationOptionsProvider
 {
@@ -11,8 +11,8 @@ public class ValidationOptionsProvider : IValidationOptionsProvider
     {
         _options = new Dictionary<Type, ValidationOptions>()
         {
-            {typeof(CurrencyNotFoundException), new ValidationOptions(){ StatusCode = (int)HttpStatusCode.NotFound} },
-            {typeof(NotEnoughAssetsException), new ValidationOptions(){ StatusCode = (int)HttpStatusCode.BadRequest} }
+            { typeof(CurrencyNotFoundException), new ValidationOptions(){ StatusCode = (int)HttpStatusCode.NotFound} },
+            { typeof(NotEnoughAssetsException), new ValidationOptions(){ StatusCode = (int)HttpStatusCode.BadRequest} }
         };
     }
 

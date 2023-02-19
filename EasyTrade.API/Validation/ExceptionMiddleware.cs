@@ -1,7 +1,6 @@
 using System.Net;
-using EasyTrade.Service.Exceptions;
 
-namespace EasyTrade.API.Middleware;
+namespace EasyTrade.API.Validation;
 
 public class ExceptionMiddleware
 {

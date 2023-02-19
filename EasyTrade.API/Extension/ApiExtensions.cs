@@ -1,4 +1,4 @@
-using EasyTrade.API.Middleware;
+using EasyTrade.API.Validation;
 
 namespace EasyTrade.API.Extension;
 

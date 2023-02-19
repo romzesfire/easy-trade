@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EasyTrade.API.Extension;
-using EasyTrade.API.Middleware;
+using EasyTrade.API.Validation;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DAL.Extension;

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace EasyTrade.API;
+namespace EasyTrade.API.Validation;
 
 public class ErrorDetails
 {

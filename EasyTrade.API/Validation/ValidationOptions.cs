@@ -1,4 +1,4 @@
-namespace EasyTrade.API.Middleware;
+namespace EasyTrade.API.Validation;
 
 public class ValidationOptions
 {
