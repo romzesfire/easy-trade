@@ -15,6 +15,10 @@ public class UpdateCoefficientModel
 
 public class UpdateCurrencyTradeCoefficientModel : UpdateCoefficientModel
 {
+    [MaxLength(3)]
+    [MinLength(3)]
     public string FirstIsoCode { get; set; }
+    [MaxLength(3)]
+    [MinLength(3)]
     public string SecondIsoCode { get; set; }
 }
