@@ -10,6 +10,7 @@ public class ExceptionMiddleware
     public ExceptionMiddleware(RequestDelegate next, IValidationOptionsProvider validationOptionsProvider)
     {
         _next = next;
+        _validationOptions = validationOptionsProvider.Get();
     }
     
     public async Task InvokeAsync(HttpContext httpContext)
@@ -26,23 +27,15 @@ public class ExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-        
-        if (exception is NotFoundException notFoundException)
+        var exceptionType = exception.GetType();
+        if (_validationOptions.ContainsKey(exceptionType))
         {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            var options = _validationOptions[exceptionType];
+            context.Response.StatusCode = options.StatusCode;
             await context.Response.WriteAsync(new ErrorDetails()
             {
                 StatusCode = context.Response.StatusCode,
-                Message = notFoundException.Message
-            }.ToString());
-        }
-        else if (exception is BadRequestException badRequestException)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(new ErrorDetails()
-            {
-                StatusCode = context.Response.StatusCode,
-                Message = badRequestException.Message
+                Message = exception.Message
             }.ToString());
         }
         else

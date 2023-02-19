@@ -34,7 +34,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var buyCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.BuyCurrency);
         var sellCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.SellCurrency);
         
-        ValidateCurrencies(buyCcy, sellCcy);
+        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
         
         var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
@@ -79,16 +79,16 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     }
 
 
-    private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy)
+    private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy, TradeCreationModel creationModel)
     {
         if (buyCcy == null)
         {
-            throw new CurrencyNotFoundException(buyCcy.IsoCode);
+            throw new CurrencyNotFoundException(creationModel.BuyCurrency);
         }
 
         if (sellCcy == null)
         {
-            throw new CurrencyNotFoundException(sellCcy.IsoCode);
+            throw new CurrencyNotFoundException(creationModel.SellCurrency);
         }
     }
 }

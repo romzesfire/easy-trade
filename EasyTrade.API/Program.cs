@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using EasyTrade.API.Extension;
 using EasyTrade.API.Middleware;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
@@ -28,6 +29,7 @@ var dd = options.Options;
 
 
 builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
+    .AddValidationOptions()
     .AddLocalCurrenciesProvider()
     .AddScoped<IBalanceProvider, BalanceDbProvider>()
     .AddScoped<ICurrencyTradesProvider, CurrencyTradesDbProvider>()
@@ -45,9 +47,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.Run();
