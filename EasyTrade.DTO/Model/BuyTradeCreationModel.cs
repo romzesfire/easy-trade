@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Validation;
 
 namespace EasyTrade.DTO.Model;

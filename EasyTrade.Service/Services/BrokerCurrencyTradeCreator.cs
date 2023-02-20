@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
@@ -8,8 +7,7 @@ namespace EasyTrade.Service.Services;
 
 public class BrokerCurrencyTradeCreator : IBrokerCurrencyTradeCreator
 {
-    private IQuotesProvider _quotesProvider;
-    private ICurrenciesProvider _currenciesProvider;
+    private readonly IQuotesProvider _quotesProvider;
     
     public BrokerCurrencyTradeCreator(IQuotesProvider quotesProvider)
     {

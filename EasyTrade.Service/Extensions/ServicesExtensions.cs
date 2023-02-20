@@ -1,11 +1,6 @@
-using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Repository;
 using EasyTrade.DTO.Abstractions;
-using EasyTrade.DTO.Model.Repository;
 using EasyTrade.Service.Configuration;
-using EasyTrade.Service.Model.ResponseModels;
 using EasyTrade.Service.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 namespace EasyTrade.Service.Extensions;

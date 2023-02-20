@@ -1,4 +1,3 @@
-using EasyTrade.Service.Model;
 using EasyTrade.Service.Model.ResponseModels;
 
 namespace EasyTrade.DTO.Model;

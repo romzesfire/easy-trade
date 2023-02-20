@@ -1,12 +1,11 @@
 using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
-using EasyTrade.DTO.Model;
 
 namespace EasyTrade.Service.Services;
 
 public class TerminologyLocalApi : ITerminologyApi
 {
-  private Currency[] _availableCurrencies = 
+  private readonly Currency[] _availableCurrencies = 
   {
     new Currency(1,"Rouble", "RUB" ),
     new Currency(2, "Euro", "EUR"),

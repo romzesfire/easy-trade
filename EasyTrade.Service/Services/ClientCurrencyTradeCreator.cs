@@ -10,11 +10,11 @@ namespace EasyTrade.Service.Services;
 
 public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
 {
-    private IBrokerCurrencyTradeCreator _brokerTradeCreator;
-    private EasyTradeDbContext _db;
-    private IRepository<Currency, string> _currencyRepository;
-    private IRepository<Balance, string> _balanceRepository;
-    private IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
+    private readonly IBrokerCurrencyTradeCreator _brokerTradeCreator;
+    private readonly EasyTradeDbContext _db;
+    private readonly IRepository<Currency, string> _currencyRepository;
+    private readonly IRepository<Balance, string> _balanceRepository;
+    private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
         EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
         IRepository<Balance, string> balanceRepository,

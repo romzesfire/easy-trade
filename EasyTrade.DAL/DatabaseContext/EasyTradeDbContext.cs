@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.Model;
 using Microsoft.EntityFrameworkCore;
 

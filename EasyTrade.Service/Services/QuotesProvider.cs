@@ -6,7 +6,7 @@ namespace EasyTrade.Service.Services;
 
 public class QuotesProvider : IQuotesProvider
 {
-    private IQuotesApi _api;
+    private readonly IQuotesApi _api;
 
     public QuotesProvider(IQuotesApi api)
     {

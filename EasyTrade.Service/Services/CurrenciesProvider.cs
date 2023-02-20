@@ -8,7 +8,7 @@ namespace EasyTrade.Service.Services;
 
 public class CurrenciesProvider : ICurrenciesProvider
 {
-    private IRepository<Currency, string> _ccyProvider;
+    private readonly IRepository<Currency, string> _ccyProvider;
     public CurrenciesProvider(IRepository<Currency, string> ccyProvider)
     {
         _ccyProvider = ccyProvider;

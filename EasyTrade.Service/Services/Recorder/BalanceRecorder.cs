@@ -8,8 +8,8 @@ namespace EasyTrade.Service.Services.Recorder;
 
 public class BalanceRecorder : IDataRecorder<UpdateBalanceModel>
 {
-    private EasyTradeDbContext _db;
-    private IRepository<Currency, string> _ccyRepository;
+    private readonly EasyTradeDbContext _db;
+    private readonly IRepository<Currency, string> _ccyRepository;
     public BalanceRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository)
     {
         _db = db;

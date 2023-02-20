@@ -1,7 +1,5 @@
-using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
-using EasyTrade.DTO.Model;
 using EasyTrade.DTO.Model.Repository;
 using EasyTrade.Service.Model.ResponseModels;
 
@@ -9,7 +7,7 @@ namespace EasyTrade.Service.Services;
 
 public class CurrencyTradesDbProvider : ICurrencyTradesProvider
 {
-    private IRepository<CurrencyTrade, int> _tradeProvider;
+    private readonly IRepository<CurrencyTrade, int> _tradeProvider;
     public CurrencyTradesDbProvider(IRepository<CurrencyTrade, int> tradeProvider)
     {
         _tradeProvider = tradeProvider;

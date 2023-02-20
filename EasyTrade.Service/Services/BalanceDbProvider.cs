@@ -1,4 +1,3 @@
-using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.DAL.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model.Repository;
@@ -8,7 +7,7 @@ namespace EasyTrade.Service.Services;
 
 public class BalanceDbProvider : IBalanceProvider
 {
-    private IRepository<Balance, string> _balanceRepository;
+    private readonly IRepository<Balance, string> _balanceRepository;
     public BalanceDbProvider(IRepository<Balance, string> balanceRepository)
     {
         _balanceRepository = balanceRepository;

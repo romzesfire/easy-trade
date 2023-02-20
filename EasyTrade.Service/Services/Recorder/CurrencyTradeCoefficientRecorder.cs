@@ -8,8 +8,8 @@ namespace EasyTrade.Service.Services.Recorder;
 
 public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTradeCoefficientModel>
 {
-    private EasyTradeDbContext _db;
-    private IRepository<Currency, string> _ccyRepository;
+    private readonly EasyTradeDbContext _db;
+    private readonly IRepository<Currency, string> _ccyRepository;
     public CurrencyTradeCoefficientRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository)
     {
         _db = db;
