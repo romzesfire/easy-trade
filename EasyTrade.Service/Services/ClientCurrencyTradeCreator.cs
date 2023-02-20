@@ -29,8 +29,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
 
     public void Create(BuyTradeCreationModel tradeModel)
     {
-        (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
-        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
+        var (buyCcy, sellCcy) = GetCurrencies(tradeModel);
         var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
         var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
@@ -45,7 +44,6 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     public void Create(SellTradeCreationModel tradeModel)
     {
         (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
-        ValidateCurrencies(buyCcy, sellCcy, tradeModel);
         var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
         var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
@@ -59,26 +57,14 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
 
     private (Currency?, Currency?) GetCurrencies(TradeCreationModel tradeModel)
     {
-        var currencies = _currencyRepository.GetAll();
-        
-        var buyCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.BuyCurrency);
-        var sellCcy = currencies.FirstOrDefault(c => c.IsoCode == tradeModel.SellCurrency);
+       
+        var buyCcy = _currencyRepository.Get(tradeModel.BuyCurrency);
+        var sellCcy = _currencyRepository.Get(tradeModel.SellCurrency);
 
         return (buyCcy, sellCcy);
     }
     
-    private void ValidateCurrencies(Currency? buyCcy, Currency? sellCcy, TradeCreationModel creationModel)
-    {
-        if (buyCcy == null)
-        {
-            throw new CurrencyNotFoundException(creationModel.BuyCurrency);
-        }
 
-        if (sellCcy == null)
-        {
-            throw new CurrencyNotFoundException(creationModel.SellCurrency);
-        }
-    }
     
     private void ValidateBalance(Currency sellCcy, decimal sellAmount)
     {

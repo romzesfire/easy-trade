@@ -1,4 +1,5 @@
 
+using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -9,28 +10,44 @@ namespace EasyTrade.API.Controllers;
 [Route("[controller]")]
 public class AdministratorController : ControllerBase
 {
-    private readonly ILogger<ClientTradeController> _logger;
-    private IBalanceProvider _balanceProvider;
-    private ICoefficientProvider _coefficientProvider;
-    public AdministratorController(ILogger<ClientTradeController> logger, IBalanceProvider balanceProvider, 
-        ICoefficientProvider coefficientProvider)
+    
+    private IDataRecorder<UpdateBalanceModel> _updateBalance;
+    private IDataRecorder<UpdateCurrencyTradeCoefficientModel> _updateCcyTradeCoefficient;
+    private ICurrencyTradeCoefficientsProvider _coefficientsProvider;
+    public AdministratorController(IDataRecorder<UpdateBalanceModel> updateBalance,
+        IDataRecorder<UpdateCurrencyTradeCoefficientModel> updateCcyTradeCoefficient,
+        ICurrencyTradeCoefficientsProvider coefficientsProvider)
     {
-        _logger = logger;
-        _balanceProvider = balanceProvider;
-        _coefficientProvider = coefficientProvider;
+        _updateBalance = updateBalance;
+        _updateCcyTradeCoefficient = updateCcyTradeCoefficient;
+        _coefficientsProvider = coefficientsProvider;
     }
     
     [HttpPost("ReplenishBalance")]
     public IActionResult ReplenishBalance(UpdateBalanceModel balanceModel)
     {
-        _balanceProvider.GetBalance(balanceModel.IsoCode).Amount += balanceModel.Amount;
+        _updateBalance.Record(balanceModel);
         return Ok();
     }
 
     [HttpPost("UpdateCoefficient")]
-    public IActionResult UpdateCoefficient(UpdateCoefficientModel updateCoefficientModel)
+    public IActionResult UpdateCurrencyTradeCoefficient(UpdateCurrencyTradeCoefficientModel updateCoefficientModel)
     {
-
+        _updateCcyTradeCoefficient.Record(updateCoefficientModel);
         return Ok();
+    }
+
+    [HttpGet("GetCoefficient")]
+    public IActionResult GetCoeficient([MaxLength(3)] [MinLength(3)] string? firstIso,
+        [MaxLength(3)] [MinLength(3)] string? secondIso)
+    {
+        var c =_coefficientsProvider.GetCoefficient(firstIso, secondIso);
+        return Ok(c);
+    }
+    [HttpGet("GetCoefficients")]
+    public IActionResult GetCoeficients(int limit, int offset)
+    {
+        var c = _coefficientsProvider.GetCoefficientsLimit(limit, offset);
+        return Ok(c);
     }
 }

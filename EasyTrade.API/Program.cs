@@ -35,8 +35,8 @@ builder.Services.AddQuotesProvider(configuration.GetSection("ApiLayer").Get<Quot
     .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
     .AddDbServices(configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
     .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
-    .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>();
-    
+    .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
+    .AddScoped<ICurrencyTradeCoefficientsProvider, CurrencyTradeCoefficientsProvider>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

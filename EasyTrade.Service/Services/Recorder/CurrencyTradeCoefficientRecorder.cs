@@ -33,4 +33,5 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
         _db.Coefficients.Add(c);
         _db.SaveChanges();
     }
+
 }
