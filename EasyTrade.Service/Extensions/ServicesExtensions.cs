@@ -40,12 +40,13 @@ public static class ServicesExtensions
             {
                 o.UseNpgsql(connectionString);
             })
-            .AddScoped<IRepository<Balance, string>, BalanceRepository>()
+            .AddScoped<IRepository<Operation, int>, OperationsRepository>()
             .AddScoped<IRepository<Currency, string>, CurrencyRepository>()
+            .AddScoped<IRepository<Balance, string>, BalanceRepository>()
             .AddScoped<IRepository<CurrencyTradeCoefficient, (string?, string?)>,
                 CurrencyTradeCoefficientRepository>()
-            .AddScoped<IRepository<CurrencyTrade, int>, CurrencyTradeRepository>()
-            .AddScoped<IDataRecorder<UpdateBalanceModel>, BalanceRecorder>()
+            .AddScoped<IRepository<ClientCurrencyTrade, int>, CurrencyTradeRepository>()
+            .AddScoped<IDataRecorder<UpdateBalanceModel>, OperationRecorder>()
             .AddScoped<IDataRecorder<UpdateCurrencyTradeCoefficientModel>, CurrencyTradeCoefficientRecorder>();
         return services;
     }

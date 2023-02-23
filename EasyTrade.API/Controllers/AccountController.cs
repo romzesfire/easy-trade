@@ -8,17 +8,20 @@ namespace EasyTrade.API.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private IBalanceProvider _balanceProvider;
-    public AccountController(IBalanceProvider balanceProvider)
+    private IOperationProvider _operationProvider;
+    private readonly IBalanceProvider _balanceProvider;
+
+    public AccountController(IOperationProvider operationProvider, IBalanceProvider balanceProvider)
     {
+        _operationProvider = operationProvider;
         _balanceProvider = balanceProvider;
     }
     
     [HttpGet("Operations")]
     public IActionResult GetOperations(int limit = 20, int offset = 0)
     {
-        var balances = _balanceProvider.GetOperations(limit, offset);
-        return Ok(balances);
+        var balances = _operationProvider.GetOperations(limit, offset);
+        return Ok(balances.Item1);
     }
     
     // [HttpGet("Balances/{id}")]
