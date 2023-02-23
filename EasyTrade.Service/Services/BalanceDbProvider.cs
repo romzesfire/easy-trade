@@ -20,13 +20,10 @@ public class BalanceDbProvider : IBalanceProvider
         return balanceResponse;
     }
 
-    public BalanceResponse GetOperation(int id)
+    public (IEnumerable<BalanceResponse>, int) GetBalances(int limit, int offset)
     {
-        return (BalanceResponse)_balanceRepository.GetAll().First(b=>b.Id == id);
+        var (balances, count) = _balanceRepository.GetLimited(limit, offset);
+        return (balances.Select(b => (BalanceResponse)b), count);
     }
 
-    public IEnumerable<BalanceResponse> GetOperations(int limit, int offset)
-    {
-        return _balanceRepository.GetLimited(limit, offset).Select(b=>(BalanceResponse)b);
-    }
 }

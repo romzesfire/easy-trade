@@ -20,11 +20,12 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
             .Include(t => t.SellCcy).ToList();
     }
 
-    public IEnumerable<ClientCurrencyTrade> GetLimited(int limit, int offset)
+    public (IEnumerable<ClientCurrencyTrade>, int) GetLimited(int limit, int offset)
     {
-        return _db.ClientTrades.Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
+        return (_db.ClientTrades.OrderByDescending(t=>t.DateTime)
+            .Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
-            .Include(t => t.SellCcy).ToList();
+            .Include(t => t.SellCcy).ToList(), _db.ClientTrades.Count());
     }
 
     public ClientCurrencyTrade Get(int id)

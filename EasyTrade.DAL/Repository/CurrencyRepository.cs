@@ -18,9 +18,9 @@ public class CurrencyRepository : IRepository<Currency, string>
         return _db.Currencies.ToList();
     }
 
-    public IEnumerable<Currency> GetLimited(int limit, int offset)
+    public (IEnumerable<Currency>, int) GetLimited(int limit, int offset)
     {
-        return _db.Currencies.Skip(offset).Take(limit).ToList();
+        return (_db.Currencies.OrderByDescending(o=>o.Id).Skip(offset).Take(limit).ToList(), _db.Currencies.Count());
     }
 
     public Currency Get(string id)

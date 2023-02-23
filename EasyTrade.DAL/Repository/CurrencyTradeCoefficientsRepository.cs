@@ -21,12 +21,12 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
             .ToList();
     }
 
-    public IEnumerable<CurrencyTradeCoefficient> GetLimited(int limit, int offset)
+    public (IEnumerable<CurrencyTradeCoefficient>, int) GetLimited(int limit, int offset)
     {
-        return _db.Coefficients.Skip(offset).Take(limit)
+        return (_db.Coefficients.OrderByDescending(t=>t.DateTime).Skip(offset).Take(limit)
             .Include(c=>c.FirstCcy)
             .Include(c=>c.SecondCcy)
-            .ToList();
+            .ToList(), _db.Coefficients.Count());
     }
 
     public CurrencyTradeCoefficient Get((string?, string?) id)
