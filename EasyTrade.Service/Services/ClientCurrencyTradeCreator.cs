@@ -5,6 +5,7 @@ using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.DTO.Model.Repository;
 using EasyTrade.Service.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.Service.Services;
 
@@ -13,18 +14,17 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     private readonly IBrokerCurrencyTradeCreator _brokerTradeCreator;
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _currencyRepository;
-    private readonly IRepository<Balance, string> _balanceRepository;
     private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
+    private ILocker _locker;
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
-        EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
-        IRepository<Balance, string> balanceRepository,
+        ILocker locker, EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
         IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository)
     {
         _brokerTradeCreator = brokerTradeCreator;
         _coefficientRepository = coefficientRepository;
         _db = dbContext;
         _currencyRepository = currencyRepository;
-        _balanceRepository = balanceRepository;
+        _locker = locker;
     }
 
     public void Create(BuyTradeCreationModel tradeModel)
@@ -37,8 +37,14 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var sellAmount = brokerTrade.SellAmount;
         sellAmount *= c;
         
-        AddBalances(sellCcy, sellAmount, buyCcy, buyAmount, tradeModel);
-        CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+        var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+        _locker.Lock(() =>
+            {
+                AddBalances(clientTrade);
+                _db.AddTrade(clientTrade);
+                _db.SaveChanges();
+            }
+        );
     }
     
     public void Create(SellTradeCreationModel tradeModel)
@@ -50,54 +56,45 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
         buyAmount /= c;
-        
-        AddBalances(sellCcy, sellAmount, buyCcy, buyAmount, tradeModel);
-        CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+
+        var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+         _locker.Lock(() =>
+             {
+                 AddBalances(clientTrade);
+                 _db.AddTrade(clientTrade);
+                 _db.SaveChanges();
+             }
+         );
     }
 
     private (Currency?, Currency?) GetCurrencies(TradeCreationModel tradeModel)
     {
-       
         var buyCcy = _currencyRepository.Get(tradeModel.BuyCurrency);
         var sellCcy = _currencyRepository.Get(tradeModel.SellCurrency);
 
         return (buyCcy, sellCcy);
     }
-    
 
-    
-    private void ValidateBalance(Currency sellCcy, decimal sellAmount)
+    private void AddBalances(ClientCurrencyTrade tradeModel)
     {
-        var balance = _balanceRepository.Get(sellCcy.IsoCode);
-        if (balance.Amount < sellAmount)
-            throw new NotEnoughAssetsException(sellCcy.IsoCode);
-    }
-    
-    private void AddBalances(Currency sellCcy, decimal sellAmount, Currency buyCcy, decimal buyAmount,
-        TradeCreationModel tradeModel)
-    {
-        ValidateBalance(sellCcy, sellAmount);
-        var sellOperation = new Balance()
+        var sellOperation = new Operation()
         {
-            Currency = sellCcy,
-            Amount = (-1) * sellAmount,
+            Currency = tradeModel.SellCcy,
+            Amount = (-1) * tradeModel.SellAmount,
             DateTime = tradeModel.DateTime
         };
-        var buyOperation = new Balance()
+        var buyOperation = new Operation()
         {
-            Currency = buyCcy,
-            Amount = buyAmount,
+            Currency = tradeModel.BuyCcy,
+            Amount = tradeModel.BuyAmount,
             DateTime = tradeModel.DateTime
         };
-        _db.Balances.AddRange(buyOperation, sellOperation);
+        _db.AddOperations(buyOperation, sellOperation);
     }
     
-    private void CreateClientTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
+    private ClientCurrencyTrade CreateClientTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
     {
-        var clientTrade = new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
-
-        _db.AddTrade(clientTrade);
-        _db.SaveChanges();
+        return new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
     }
 
 }
