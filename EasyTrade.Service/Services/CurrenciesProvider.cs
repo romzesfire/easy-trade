@@ -16,7 +16,7 @@ public class CurrenciesProvider : ICurrenciesProvider
 
     public IEnumerable<CurrencyResponse> GetCurrencies(int limit, int offset)
     {
-        return _ccyProvider.GetLimited(limit, offset).Select(c=>(CurrencyResponse)c);
+        return _ccyProvider.GetLimited(limit, offset).Item1.Select(c=>(CurrencyResponse)c);
     }
 
     public CurrencyResponse GetCurrency(string isoCode)

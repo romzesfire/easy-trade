@@ -20,27 +20,17 @@ public class BalanceRepository : IRepository<Balance, string>
             .Include(b => b.Currency).ToList();
     }
 
-    public IEnumerable<Balance> GetLimited(int limit, int offset)
+    public (IEnumerable<Balance>, int) GetLimited(int limit, int offset)
     {
-        return _db.Balances.Skip(offset).Take(limit)
-            .Include(b => b.Currency).ToList();
+        return (_db.Balances.OrderBy(o=>o.Id).Skip(offset).Take(limit)
+            .Include(b => b.Currency).ToList(), _db.Operations.Count());
     }
 
     public Balance Get(string id)
     {
-        var operations = _db.Balances.Include(b => b.Currency)
-            .Where(b => b.Currency.IsoCode == id);
-        
-        var lastDate = operations.Max(o => o.DateTime);
-        var lastOperation = operations.First(b=>b.DateTime == lastDate);
-        var operationsList = operations.ToList();
-        var balanceAmount = operationsList.Sum(o => o.Amount);
-        var balance = new Balance()
-        {
-            Amount = balanceAmount,
-            Currency = lastOperation.Currency,
-            DateTime = lastOperation.DateTime
-        }; 
+        var balance = _db.Balances.Include(b => b.Currency)
+            .FirstOrDefault(b => b.Currency.IsoCode == id);
+
         return balance;
     }
 }

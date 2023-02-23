@@ -4,7 +4,6 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface IBalanceProvider
 {
-    public BalanceResponse GetBalance(string currencyIsoCode);
-    public BalanceResponse GetOperation(int id);
-    public IEnumerable<BalanceResponse> GetOperations(int limit, int offset);
+    public BalanceResponse GetBalance(string iso);
+    public (IEnumerable<BalanceResponse>, int) GetBalances(int limit, int offset);
 }

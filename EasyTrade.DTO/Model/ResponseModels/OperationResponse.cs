@@ -2,19 +2,21 @@
 using EasyTrade.DAL.Model;
 namespace EasyTrade.Service.Model.ResponseModels;
 
-public class BalanceResponse
+public class OperationResponse
 {
     public uint Id { get; set; }
     public CurrencyResponse Currency { get; set; }
     public decimal Amount { get; set; }
+    public DateTimeOffset DateTime { get; set; }
 
-    public static explicit operator BalanceResponse(Balance operation)
+    public static explicit operator OperationResponse(Operation operation)
     {
-        return new BalanceResponse()
+        return new OperationResponse()
         {
             Id = operation.Id,
             Currency = (CurrencyResponse)operation.Currency,
-            Amount = operation.Amount
+            Amount = operation.Amount,
+            DateTime = operation.DateTime
         };
     }
 }

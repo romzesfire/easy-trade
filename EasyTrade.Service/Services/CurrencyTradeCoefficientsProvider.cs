@@ -21,7 +21,7 @@ public class CurrencyTradeCoefficientsProvider : ICurrencyTradeCoefficientsProvi
     
     public IEnumerable<CurrencyTradeCoefficientResponse> GetCoefficientsLimit(int limit, int offset)
     {
-        var coefficients = _repo.GetLimited(limit, offset)
+        var coefficients = _repo.GetLimited(limit, offset).Item1
             .Select(c=>(CurrencyTradeCoefficientResponse)c);
         return coefficients;
     }

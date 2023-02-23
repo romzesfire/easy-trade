@@ -7,36 +7,34 @@ using EasyTrade.Service.Exceptions;
 
 namespace EasyTrade.Service.Services.Recorder;
 
-public class BalanceRecorder : IDataRecorder<UpdateBalanceModel>
+public class OperationRecorder : IDataRecorder<UpdateBalanceModel>
 {
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _ccyRepository;
     private IRepository<Balance, string> _balanceRepository;
-    public BalanceRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
-        IRepository<Balance, string> balanceRepository)
+    private ILocker _locker;
+    public OperationRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
+        IRepository<Balance, string> balanceRepository, ILocker locker)
     {
         _db = db;
+        _locker = locker;
         _ccyRepository = ccyRepository;
         _balanceRepository = balanceRepository;
     }
     public void Record(UpdateBalanceModel data)
     {
         var ccy = _ccyRepository.Get(data.IsoCode);
-        ValidateBalance(ccy, data.Amount);
-        var balance = new Balance()
+        var operation = new Operation()
         {
             Currency = ccy,
             DateTime = data.DateTime,
             Amount = data.Amount
         };
-        
-        _db.Balances.Add(balance);
-        _db.SaveChanges();
+        _locker.Lock(() =>
+        {
+            _db.AddOperation(operation);
+            _db.SaveChanges();
+        });
     }
-    private void ValidateBalance(Currency sellCcy, decimal amount)
-    {
-        var balance = _balanceRepository.Get(sellCcy.IsoCode);
-        if (balance.Amount + amount <= 0)
-            throw new NotEnoughAssetsException(sellCcy.IsoCode);
-    }
+
 }

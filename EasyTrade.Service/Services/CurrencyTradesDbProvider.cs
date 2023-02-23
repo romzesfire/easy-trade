@@ -7,8 +7,8 @@ namespace EasyTrade.Service.Services;
 
 public class CurrencyTradesDbProvider : ICurrencyTradesProvider
 {
-    private readonly IRepository<CurrencyTrade, int> _tradeProvider;
-    public CurrencyTradesDbProvider(IRepository<CurrencyTrade, int> tradeProvider)
+    private readonly IRepository<ClientCurrencyTrade, int> _tradeProvider;
+    public CurrencyTradesDbProvider(IRepository<ClientCurrencyTrade, int> tradeProvider)
     {
         _tradeProvider = tradeProvider;
     }
@@ -16,7 +16,7 @@ public class CurrencyTradesDbProvider : ICurrencyTradesProvider
 
     public IEnumerable<CurrencyTradeResponse> GetTrades(int limit, int offset)
     {
-        return _tradeProvider.GetLimited(limit, offset).Select(c=>(CurrencyTradeResponse)c);
+        return _tradeProvider.GetLimited(limit, offset).Item1.Select(c=>(CurrencyTradeResponse)c);
     }
 
     public CurrencyTradeResponse GetTrade(int id)
