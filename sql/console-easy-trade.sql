@@ -47,14 +47,17 @@ CREATE TABLE coefficients(
 );
 
 SELECT * FROM "Balances";
-SELECT * FROM "brokerTrades";
+SELECT * FROM "Operations";
 SELECT * FROM "Coefficients";
 SELECT * FROM "Currencies";
+SELECT * FROM "BrokerTrades";
+SELECT * FROM "ClientTrades";
 DROP TABLE "Currencies";
 DROP TABLE "Coefficients";
 DROP TABLE "BrokerTrades";
 DROP TABLE "ClientTrades";
 DROP TABLE "Balances";
+DELETE FROM "Operations" where "Id" > 9;
 INSERT INTO broker_trade(BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (10, 600, 2, 1);
 INSERT INTO client_trade(BrokerCurrencyTradeId, BuyAmount, SellAmount, BuyCcyId, SellCcyId) VALUES (2, 10, 600, 2, 1);
 
@@ -80,3 +83,14 @@ INSERT INTO "Balances" ("CurrencyId", "Amount", "DateTime") VALUES (6, 10000000,
 INSERT INTO "Balances" ("CurrencyId", "Amount", "DateTime") VALUES (7, 10000000, now());
 INSERT INTO "Balances" ("CurrencyId", "Amount", "DateTime") VALUES (8, 10000000, now());
 INSERT INTO "Balances" ("CurrencyId", "Amount", "DateTime") VALUES (9, 10000000, now());
+
+
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (1, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (2, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (3, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (4, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (5, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (6, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (7, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (8, 10000000, now());
+INSERT INTO "Operations" ("CurrencyId", "Amount", "DateTime") VALUES (9, 10000000, now());
