@@ -42,6 +42,7 @@ public class AccountController : ControllerBase
     public IActionResult WithdrawToCard(string ccy, decimal amount,  
         string iban = null, string swift = null)
     {
+        // не хватает операции с балансом
         return Ok();
     }
 }

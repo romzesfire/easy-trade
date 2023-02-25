@@ -37,12 +37,15 @@ public class EasyTradeDbContext : DbContext
     {
         foreach (var operation in operations)
         {
-            AddOperation(operation);
+            AddOperation(operation); // не очень эффективно делать запрос к Balances в БД для каждой операции
         }
     }
     
     public void AddOperation(Operation operation)
     {
+        // многовато логики в db-контексте - тут уже стоит выделить доменный сервис - отдельный класс
+        // который хорошо покроется юнит тестом без всяких эффорт
+        
         var sum = GetSumOfOperations(operation.Currency);
         sum += operation.Amount;
         if (sum < 0)
@@ -50,16 +53,17 @@ public class EasyTradeDbContext : DbContext
             throw new NotEnoughAssetsException(operation.Currency.IsoCode);
         }
         Operations.Add(operation);
-        var balance = Balances.Include(b=>b.Currency)
+        var balance = Balances.Include(b=>b.Currency) // кажется зря мы выбрали суррогатный ключ для валют - с ключом по IsoCode было бы меньше join
             .FirstOrDefault(b=>b.Currency.IsoCode == operation.Currency.IsoCode);
         
         if (balance == null)
         {
-            throw new AccountCurrencyNotFoundException(operation.Currency.IsoCode);
+            throw new AccountCurrencyNotFoundException(operation.Currency.IsoCode); // логичнее создать баланс в данной ситуации и придумать что делать с оптимистичным локом :)
         }
         balance.Amount = sum;
     }
 
+    // почему internal именно здесь (а не везде :) ?
     internal decimal GetSumOfOperations(Currency ccy)
     {
         var operations = Operations.Include(b => b.Currency)

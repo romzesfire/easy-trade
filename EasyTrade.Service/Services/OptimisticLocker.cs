@@ -13,9 +13,10 @@ public class OptimisticLocker : ILocker
     {
         _config = config.Value;
     }
-    public void Lock(Action func)
+    public void Lock(Action func) // странное название для оптимистичного способа, но интересный способ обобщить оба подхода
     {
-        for (int i = 1; i <= _config.IterationCount; ++i)
+        // неплохое решение, но стоит попробовать Polly
+        for (int i = 1; i <= _config.IterationCount; ++i) // обычно циклы от 0 :)
         {
             try
             {
@@ -24,8 +25,9 @@ public class OptimisticLocker : ILocker
             catch (DbUpdateConcurrencyException e)
             {
                 if (i == _config.IterationCount)
-                    throw new ConcurrentWriteException();
-                Thread.Sleep(_config.DelayMilliseconds);
+                    throw new ConcurrentWriteException(); // отлично!
+                Thread.Sleep(_config.DelayMilliseconds); // await Task.Delay (+ переделка всего на асинк)
+                // тут бы залогировать факт попытки
                 continue;
             }
 

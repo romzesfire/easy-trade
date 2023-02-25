@@ -30,7 +30,7 @@ public class AdministratorController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("UpdateCoefficient")]
+    [HttpPut("UpdateCoefficient")] // на коэффециенты хорошо ляжет REST API (CRUD), не хватает отдельного Create
     public IActionResult UpdateCurrencyTradeCoefficient(UpdateCurrencyTradeCoefficientModel updateCoefficientModel)
     {
         _updateCcyTradeCoefficient.Record(updateCoefficientModel);
@@ -38,14 +38,14 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("GetCoefficient")]
-    public IActionResult GetCoeficient([MaxLength(3)] [MinLength(3)] string? firstIso,
+    public IActionResult GetCoeficient([MaxLength(3)] [MinLength(3)] string? firstIso, // лучше модельку
         [MaxLength(3)] [MinLength(3)] string? secondIso)
     {
         var c =_coefficientsProvider.GetCoefficient(firstIso, secondIso);
         return Ok(c);
     }
     [HttpGet("GetCoefficients")]
-    public IActionResult GetCoeficients(int limit, int offset)
+    public IActionResult GetCoeficients(int limit, int offset) // часто встречаются эти параметры для пейджинга - может сделать общую модельку?
     {
         var c = _coefficientsProvider.GetCoefficientsLimit(limit, offset);
         return Ok(c);
