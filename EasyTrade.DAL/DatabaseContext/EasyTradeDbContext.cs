@@ -58,6 +58,7 @@ public class EasyTradeDbContext : DbContext
             throw new AccountCurrencyNotFoundException(operation.Currency.IsoCode);
         }
         balance.Amount = sum;
+        balance.Version = Guid.NewGuid();
     }
 
     internal decimal GetSumOfOperations(Currency ccy)

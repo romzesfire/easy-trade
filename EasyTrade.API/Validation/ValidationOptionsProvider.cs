@@ -34,7 +34,7 @@ public class ValidationOptionsProvider : IValidationOptionsProvider
                 }
             },
             {
-                typeof(DbUpdateConcurrencyException), 
+                typeof(ConcurrentWriteException), 
                 new ValidationOptions()
                 {
                     StatusCode = (int)HttpStatusCode.Conflict
