@@ -30,7 +30,7 @@ public class OperationRecorder : IDataRecorder<UpdateBalanceModel>
             DateTime = data.DateTime,
             Amount = data.Amount
         };
-        _locker.Lock(() =>
+        _locker.ConcurrentExecute(() =>
         {
             _db.AddOperation(operation);
             _db.SaveChanges();

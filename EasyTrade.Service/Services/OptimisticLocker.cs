@@ -20,9 +20,21 @@ public class OptimisticLocker : ILocker
         
         _retryPolicy = Policy.Handle<ConcurrentWriteException>()
             .WaitAndRetry(delay);
+        
     }
-    public void Lock(Action func)
+    public void ConcurrentExecute(Action func)
     {
-        _retryPolicy.Execute(func);
+        var result = _retryPolicy.ExecuteAndCapture(func);
+        if (result.FinalException != null)
+        {
+            if (result.FinalException is DbUpdateConcurrencyException)
+            {
+                throw new ConcurrentWriteException();
+            }
+            else
+            {
+                throw result.FinalException;
+            }
+        }
     }
 }

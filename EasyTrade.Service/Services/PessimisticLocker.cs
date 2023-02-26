@@ -4,7 +4,7 @@ namespace EasyTrade.Service.Services;
 
 public class PessimisticLocker : ILocker
 {
-    public void Lock(Action func)
+    public void ConcurrentExecute(Action func)
     {
         var locker = new object();
         lock (locker)
