@@ -3,33 +3,22 @@ using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Retry;
 
 namespace EasyTrade.Service.Services;
 
 public class OptimisticLocker : ILocker
 {
-    private LockerConfiguration _config;
+    private RetryPolicy _retryPolicy;
     public OptimisticLocker(IOptions<LockerConfiguration> config)
     {
-        _config = config.Value;
+        _retryPolicy = Policy.Handle<ConcurrentWriteException>()
+            .WaitAndRetry(config.Value.IterationCount,
+                retry => TimeSpan.FromMilliseconds(config.Value.DelayMilliseconds));
     }
     public void Lock(Action func)
     {
-        for (int i = 1; i <= _config.IterationCount; ++i)
-        {
-            try
-            {
-                func();
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                if (i == _config.IterationCount)
-                    throw new ConcurrentWriteException();
-                Thread.Sleep(_config.DelayMilliseconds);
-                continue;
-            }
-
-            break;
-        }
+        _retryPolicy.Execute(func);
     }
 }
