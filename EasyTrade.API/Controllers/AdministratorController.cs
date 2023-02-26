@@ -45,9 +45,9 @@ public class AdministratorController : ControllerBase
         return Ok(c);
     }
     [HttpGet("GetCoefficients")]
-    public IActionResult GetCoeficients(int limit, int offset)
+    public IActionResult GetCoeficients(PagingRequestModel model)
     {
-        var c = _coefficientsProvider.GetCoefficientsLimit(limit, offset);
+        var c = _coefficientsProvider.GetCoefficientsLimit(model.Limit, model.Offset);
         return Ok(c);
     }
 }

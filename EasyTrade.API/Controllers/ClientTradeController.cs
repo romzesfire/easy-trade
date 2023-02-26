@@ -19,17 +19,12 @@ public class ClientTradeController : ControllerBase
         _tradeCreator = tradeCreator;
         _currencyTradesProvider = currencyTradesProvider;
     }
-    //ДТО зависит от DAL это ок?
-    //2 Get метода
-    //DTO
-    //REST API - посмотреть структуру и применить к методам
-    //БД в сервисы убрать
+
     [HttpPost("Buy")]//Buy, Sell
     public IActionResult Buy(BuyTradeCreationModel buyModel)
     {
         //FluentValidator
         //CQRS
-        //ModelState.Values.Where(s=>s.)
         _tradeCreator.Create(buyModel);
         return Ok();
     }
@@ -42,9 +37,9 @@ public class ClientTradeController : ControllerBase
     }
     
     [HttpGet("Trades")]
-    public IActionResult GetTrades(int limit = 20, int offset = 0)
+    public IActionResult GetTrades(PagingRequestModel model)
     {
-        var trades = _currencyTradesProvider.GetTrades(limit, offset);
+        var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset);
         return Ok(trades);
     }
     
