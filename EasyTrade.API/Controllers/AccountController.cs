@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
     }
     
     [HttpGet("Operations")]
-    public IActionResult GetOperations(PagingRequestModel model)
+    public IActionResult GetOperations([FromBody]PagingRequestModel model)
     {
         var balances = _operationProvider.GetOperations(model.Limit, model.Offset);
         return Ok(balances.Item1);

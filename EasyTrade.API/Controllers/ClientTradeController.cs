@@ -2,6 +2,7 @@
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using Microsoft.AspNetCore.Mvc;
+using Refit;
 
 namespace EasyTrade.API.Controllers;
 
@@ -37,7 +38,7 @@ public class ClientTradeController : ControllerBase
     }
     
     [HttpGet("Trades")]
-    public IActionResult GetTrades(PagingRequestModel model)
+    public IActionResult GetTrades([FromBody]PagingRequestModel model)
     {
         var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset);
         return Ok(trades);

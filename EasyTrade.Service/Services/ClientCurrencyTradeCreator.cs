@@ -38,7 +38,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         sellAmount *= c;
         
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-        _locker.Lock(() =>
+        _locker.ConcurrentExecute(() =>
             {
                 AddBalances(clientTrade);
                 _db.AddTrade(clientTrade);
@@ -58,7 +58,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         buyAmount /= c;
 
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-         _locker.Lock(() =>
+         _locker.ConcurrentExecute(() =>
              {
                  AddBalances(clientTrade);
                  _db.AddTrade(clientTrade);
