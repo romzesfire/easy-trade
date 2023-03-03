@@ -1,4 +1,4 @@
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Model;
 
 namespace EasyTrade.DTO.Abstractions;
 

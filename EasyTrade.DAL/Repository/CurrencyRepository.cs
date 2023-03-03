@@ -1,7 +1,7 @@
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Exception;
+using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Model.Repository;
-using EasyTrade.Service.Exceptions;
 
 namespace EasyTrade.DAL.Repository;
 

@@ -2,7 +2,6 @@
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using Microsoft.AspNetCore.Mvc;
-using Refit;
 
 namespace EasyTrade.API.Controllers;
 

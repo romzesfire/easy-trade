@@ -30,4 +30,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\EasyTrade.Domain\EasyTrade.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

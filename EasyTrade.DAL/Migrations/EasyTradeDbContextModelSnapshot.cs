@@ -22,7 +22,7 @@ namespace EasyTrade.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.Balance", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.Balance", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,8 +33,9 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("CurrencyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("Version")
                         .IsConcurrencyToken()
@@ -42,12 +43,12 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CurrencyIso");
 
                     b.ToTable("Balances");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.BrokerCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.BrokerCurrencyTrade", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,8 +59,9 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("BuyAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("BuyCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("BuyCurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("DateTime")
                         .HasColumnType("timestamp with time zone");
@@ -67,22 +69,23 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("SellAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("SellCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("SellCurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("TradeType")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BuyCcyId");
+                    b.HasIndex("BuyCurrencyIso");
 
-                    b.HasIndex("SellCcyId");
+                    b.HasIndex("SellCurrencyIso");
 
                     b.ToTable("BrokerTrades");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.ClientCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.ClientCurrencyTrade", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,8 +99,9 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("BuyAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("BuyCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("BuyCurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("DateTime")
                         .HasColumnType("timestamp with time zone");
@@ -105,8 +109,9 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("SellAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("SellCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("SellCurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("TradeType")
                         .HasColumnType("integer");
@@ -115,35 +120,31 @@ namespace EasyTrade.DAL.Migrations
 
                     b.HasIndex("BrokerCurrencyTradeId");
 
-                    b.HasIndex("BuyCcyId");
+                    b.HasIndex("BuyCurrencyIso");
 
-                    b.HasIndex("SellCcyId");
+                    b.HasIndex("SellCurrencyIso");
 
                     b.ToTable("ClientTrades");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.Currency", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.Currency", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("IsoCode")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IsoCode");
 
                     b.ToTable("Currencies");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.CurrencyTradeCoefficient", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.CurrencyTradeCoefficient", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,22 +158,22 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<DateTimeOffset>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("FirstCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("FirstCcyIsoCode")
+                        .HasColumnType("text");
 
-                    b.Property<long?>("SecondCcyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("SecondCcyIsoCode")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstCcyId");
+                    b.HasIndex("FirstCcyIsoCode");
 
-                    b.HasIndex("SecondCcyId");
+                    b.HasIndex("SecondCcyIsoCode");
 
                     b.ToTable("Coefficients");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.Operation", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.Operation", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -183,41 +184,42 @@ namespace EasyTrade.DAL.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("CurrencyId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CurrencyIso")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CurrencyIso");
 
                     b.ToTable("Operations");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.Balance", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.Balance", b =>
                 {
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "Currency")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
+                        .HasForeignKey("CurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Currency");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.BrokerCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.BrokerCurrencyTrade", b =>
                 {
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "BuyCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "BuyCcy")
                         .WithMany()
-                        .HasForeignKey("BuyCcyId")
+                        .HasForeignKey("BuyCurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "SellCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "SellCcy")
                         .WithMany()
-                        .HasForeignKey("SellCcyId")
+                        .HasForeignKey("SellCurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -226,23 +228,23 @@ namespace EasyTrade.DAL.Migrations
                     b.Navigation("SellCcy");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.ClientCurrencyTrade", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.ClientCurrencyTrade", b =>
                 {
-                    b.HasOne("EasyTrade.DAL.Model.BrokerCurrencyTrade", "BrokerCurrencyTrade")
+                    b.HasOne("EasyTrade.Domain.Model.BrokerCurrencyTrade", "BrokerCurrencyTrade")
                         .WithMany()
                         .HasForeignKey("BrokerCurrencyTradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "BuyCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "BuyCcy")
                         .WithMany()
-                        .HasForeignKey("BuyCcyId")
+                        .HasForeignKey("BuyCurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "SellCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "SellCcy")
                         .WithMany()
-                        .HasForeignKey("SellCcyId")
+                        .HasForeignKey("SellCurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -253,26 +255,26 @@ namespace EasyTrade.DAL.Migrations
                     b.Navigation("SellCcy");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.CurrencyTradeCoefficient", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.CurrencyTradeCoefficient", b =>
                 {
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "FirstCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "FirstCcy")
                         .WithMany()
-                        .HasForeignKey("FirstCcyId");
+                        .HasForeignKey("FirstCcyIsoCode");
 
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "SecondCcy")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "SecondCcy")
                         .WithMany()
-                        .HasForeignKey("SecondCcyId");
+                        .HasForeignKey("SecondCcyIsoCode");
 
                     b.Navigation("FirstCcy");
 
                     b.Navigation("SecondCcy");
                 });
 
-            modelBuilder.Entity("EasyTrade.DAL.Model.Operation", b =>
+            modelBuilder.Entity("EasyTrade.Domain.Model.Operation", b =>
                 {
-                    b.HasOne("EasyTrade.DAL.Model.Currency", "Currency")
+                    b.HasOne("EasyTrade.Domain.Model.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
+                        .HasForeignKey("CurrencyIso")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

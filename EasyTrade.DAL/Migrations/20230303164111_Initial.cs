@@ -16,14 +16,13 @@ namespace EasyTrade.DAL.Migrations
                 name: "Currencies",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    IsoCode = table.Column<string>(type: "text", nullable: false)
+                    IsoCode = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Currencies", x => x.Id);
+                    table.PrimaryKey("PK_Currencies", x => x.IsoCode);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,18 +31,18 @@ namespace EasyTrade.DAL.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DateTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CurrencyId = table.Column<long>(type: "bigint", nullable: false),
+                    Version = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyIso = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Balances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Balances_Currencies_CurrencyId",
-                        column: x => x.CurrencyId,
+                        name: "FK_Balances_Currencies_CurrencyIso",
+                        column: x => x.CurrencyIso,
                         principalTable: "Currencies",
-                        principalColumn: "Id",
+                        principalColumn: "IsoCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -57,23 +56,23 @@ namespace EasyTrade.DAL.Migrations
                     BuyAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     SellAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     TradeType = table.Column<int>(type: "integer", nullable: false),
-                    BuyCcyId = table.Column<long>(type: "bigint", nullable: false),
-                    SellCcyId = table.Column<long>(type: "bigint", nullable: false)
+                    BuyCurrencyIso = table.Column<string>(type: "text", nullable: false),
+                    SellCurrencyIso = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BrokerTrades", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BrokerTrades_Currencies_BuyCcyId",
-                        column: x => x.BuyCcyId,
+                        name: "FK_BrokerTrades_Currencies_BuyCurrencyIso",
+                        column: x => x.BuyCurrencyIso,
                         principalTable: "Currencies",
-                        principalColumn: "Id",
+                        principalColumn: "IsoCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BrokerTrades_Currencies_SellCcyId",
-                        column: x => x.SellCcyId,
+                        name: "FK_BrokerTrades_Currencies_SellCurrencyIso",
+                        column: x => x.SellCurrencyIso,
                         principalTable: "Currencies",
-                        principalColumn: "Id",
+                        principalColumn: "IsoCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -83,8 +82,8 @@ namespace EasyTrade.DAL.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstCcyId = table.Column<long>(type: "bigint", nullable: true),
-                    SecondCcyId = table.Column<long>(type: "bigint", nullable: true),
+                    FirstCcyIsoCode = table.Column<string>(type: "text", nullable: true),
+                    SecondCcyIsoCode = table.Column<string>(type: "text", nullable: true),
                     DateTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Coefficient = table.Column<decimal>(type: "numeric", nullable: false)
                 },
@@ -92,15 +91,36 @@ namespace EasyTrade.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Coefficients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Coefficients_Currencies_FirstCcyId",
-                        column: x => x.FirstCcyId,
+                        name: "FK_Coefficients_Currencies_FirstCcyIsoCode",
+                        column: x => x.FirstCcyIsoCode,
                         principalTable: "Currencies",
-                        principalColumn: "Id");
+                        principalColumn: "IsoCode");
                     table.ForeignKey(
-                        name: "FK_Coefficients_Currencies_SecondCcyId",
-                        column: x => x.SecondCcyId,
+                        name: "FK_Coefficients_Currencies_SecondCcyIsoCode",
+                        column: x => x.SecondCcyIsoCode,
                         principalTable: "Currencies",
-                        principalColumn: "Id");
+                        principalColumn: "IsoCode");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Operations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CurrencyIso = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Operations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Operations_Currencies_CurrencyIso",
+                        column: x => x.CurrencyIso,
+                        principalTable: "Currencies",
+                        principalColumn: "IsoCode",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,8 +134,8 @@ namespace EasyTrade.DAL.Migrations
                     BuyAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     SellAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     TradeType = table.Column<int>(type: "integer", nullable: false),
-                    BuyCcyId = table.Column<long>(type: "bigint", nullable: false),
-                    SellCcyId = table.Column<long>(type: "bigint", nullable: false)
+                    BuyCurrencyIso = table.Column<string>(type: "text", nullable: false),
+                    SellCurrencyIso = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,33 +147,33 @@ namespace EasyTrade.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientTrades_Currencies_BuyCcyId",
-                        column: x => x.BuyCcyId,
+                        name: "FK_ClientTrades_Currencies_BuyCurrencyIso",
+                        column: x => x.BuyCurrencyIso,
                         principalTable: "Currencies",
-                        principalColumn: "Id",
+                        principalColumn: "IsoCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientTrades_Currencies_SellCcyId",
-                        column: x => x.SellCcyId,
+                        name: "FK_ClientTrades_Currencies_SellCurrencyIso",
+                        column: x => x.SellCurrencyIso,
                         principalTable: "Currencies",
-                        principalColumn: "Id",
+                        principalColumn: "IsoCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Balances_CurrencyId",
+                name: "IX_Balances_CurrencyIso",
                 table: "Balances",
-                column: "CurrencyId");
+                column: "CurrencyIso");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BrokerTrades_BuyCcyId",
+                name: "IX_BrokerTrades_BuyCurrencyIso",
                 table: "BrokerTrades",
-                column: "BuyCcyId");
+                column: "BuyCurrencyIso");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BrokerTrades_SellCcyId",
+                name: "IX_BrokerTrades_SellCurrencyIso",
                 table: "BrokerTrades",
-                column: "SellCcyId");
+                column: "SellCurrencyIso");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientTrades_BrokerCurrencyTradeId",
@@ -161,24 +181,29 @@ namespace EasyTrade.DAL.Migrations
                 column: "BrokerCurrencyTradeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientTrades_BuyCcyId",
+                name: "IX_ClientTrades_BuyCurrencyIso",
                 table: "ClientTrades",
-                column: "BuyCcyId");
+                column: "BuyCurrencyIso");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientTrades_SellCcyId",
+                name: "IX_ClientTrades_SellCurrencyIso",
                 table: "ClientTrades",
-                column: "SellCcyId");
+                column: "SellCurrencyIso");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coefficients_FirstCcyId",
+                name: "IX_Coefficients_FirstCcyIsoCode",
                 table: "Coefficients",
-                column: "FirstCcyId");
+                column: "FirstCcyIsoCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coefficients_SecondCcyId",
+                name: "IX_Coefficients_SecondCcyIsoCode",
                 table: "Coefficients",
-                column: "SecondCcyId");
+                column: "SecondCcyIsoCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operations_CurrencyIso",
+                table: "Operations",
+                column: "CurrencyIso");
         }
 
         /// <inheritdoc />
@@ -192,6 +217,9 @@ namespace EasyTrade.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Coefficients");
+
+            migrationBuilder.DropTable(
+                name: "Operations");
 
             migrationBuilder.DropTable(
                 name: "BrokerTrades");

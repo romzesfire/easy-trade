@@ -1,6 +1,6 @@
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
 using EasyTrade.DAL.Repository;
+using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.DTO.Model.Repository;

@@ -18,11 +18,11 @@ public class OptimisticLocker : ILocker
             .DecorrelatedJitterBackoffV2(TimeSpan.FromMilliseconds(config.Value.DelayMilliseconds), 
                 config.Value.IterationCount);
         
-        _retryPolicy = Policy.Handle<ConcurrentWriteException>()
+        _retryPolicy = Policy.Handle<DbUpdateConcurrencyException>()
             .WaitAndRetry(delay);
         
     }
-    public void ConcurrentExecute(Action func)
+    public void ConcurrentExecute(Action func, object lockObject)
     {
         var result = _retryPolicy.ExecuteAndCapture(func);
         if (result.FinalException != null)

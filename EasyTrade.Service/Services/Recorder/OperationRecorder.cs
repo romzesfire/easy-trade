@@ -1,9 +1,8 @@
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.DTO.Model.Repository;
-using EasyTrade.Service.Exceptions;
 
 namespace EasyTrade.Service.Services.Recorder;
 
@@ -34,7 +33,7 @@ public class OperationRecorder : IDataRecorder<UpdateBalanceModel>
         {
             _db.AddOperation(operation);
             _db.SaveChanges();
-        });
+        }, ccy);
     }
 
 }

@@ -1,5 +1,5 @@
-using EasyTrade.DAL.Model;
-using EasyTrade.Service.Exceptions;
+using EasyTrade.Domain.Exception;
+using EasyTrade.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.DAL.DatabaseContext;
@@ -15,13 +15,9 @@ public class EasyTradeDbContext : DbContext
     public DbSet<ClientCurrencyTrade> ClientTrades { get; set; } = null!;
 
     public DbSet<BrokerCurrencyTrade> BrokerTrades { get; set; } = null!;
-
     public DbSet<Currency> Currencies { get; set; } = null!;
-
     public DbSet<CurrencyTradeCoefficient> Coefficients { get; set; } = null!;
-
     public DbSet<Operation> Operations { get; set; } = null!;
-
     public DbSet<Balance> Balances { get; set; } = null!;
     public EasyTradeDbContext(DbContextOptions<EasyTradeDbContext> options) : base(options)
     {
@@ -40,6 +36,7 @@ public class EasyTradeDbContext : DbContext
             AddOperation(operation);
         }
     }
+    
     
     public void AddOperation(Operation operation)
     {

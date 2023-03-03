@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Model;
 
 
 namespace EasyTrade.Service.Model.ResponseModels;

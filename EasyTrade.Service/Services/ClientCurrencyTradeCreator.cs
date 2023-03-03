@@ -1,11 +1,9 @@
 
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.DTO.Model.Repository;
-using EasyTrade.Service.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.Service.Services;
 
@@ -43,7 +41,8 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
                 AddBalances(clientTrade);
                 _db.AddTrade(clientTrade);
                 _db.SaveChanges();
-            }
+            },
+            sellCcy
         );
     }
     
@@ -63,7 +62,8 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
                  AddBalances(clientTrade);
                  _db.AddTrade(clientTrade);
                  _db.SaveChanges();
-             }
+             },
+             sellCcy
          );
     }
 

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyTrade.DAL\EasyTrade.DAL.csproj" />
+      <ProjectReference Include="..\EasyTrade.Domain\EasyTrade.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

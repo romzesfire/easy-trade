@@ -1,4 +1,4 @@
-namespace EasyTrade.DAL.Model;
+namespace EasyTrade.Domain.Model;
 
 public enum TradeOperation
 {

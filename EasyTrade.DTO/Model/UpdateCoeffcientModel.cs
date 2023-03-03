@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using EasyTrade.DAL.Model;
+using EasyTrade.Domain.Model;
 
 namespace EasyTrade.DTO.Model;
 

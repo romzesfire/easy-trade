@@ -1,6 +1,6 @@
 using System.Net;
+using EasyTrade.Domain.Exception;
 using EasyTrade.Service.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.API.Validation;
 

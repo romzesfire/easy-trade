@@ -1,5 +1,5 @@
+using EasyTrade.Domain.Model;
 
-using EasyTrade.DAL.Model;
 namespace EasyTrade.Service.Model.ResponseModels;
 
 public class BalanceResponse
