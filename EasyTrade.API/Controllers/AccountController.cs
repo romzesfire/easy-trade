@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
     }
     
     [HttpGet("Operations")]
-    public IActionResult GetOperations([FromBody]PagingRequestModel model)
+    public IActionResult GetOperations([FromQuery]PagingRequestModel model)
     {
         var balances = _operationProvider.GetOperations(model.Limit, model.Offset);
         return Ok(balances.Item1);
@@ -31,7 +31,7 @@ public class AccountController : ControllerBase
     //     var balance = _balanceProvider.GetBalance(id);
     //     return Ok(balance);
     // }
-    
+     
     [HttpGet("Balances/{isoCode}")]
     public IActionResult GetBalanceByCode([MaxLength(3)]string isoCode)
     {

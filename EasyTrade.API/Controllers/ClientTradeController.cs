@@ -38,7 +38,7 @@ public class ClientTradeController : ControllerBase
     }
     
     [HttpGet("Trades")]
-    public IActionResult GetTrades([FromBody]PagingRequestModel model)
+    public IActionResult GetTrades([FromQuery]PagingRequestModel model)
     {
         var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset);
         return Ok(trades);
