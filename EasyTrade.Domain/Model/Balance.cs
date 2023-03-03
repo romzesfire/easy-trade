@@ -11,7 +11,9 @@ public class Balance
     [ConcurrencyCheck]
     public Guid Version { get; set; }
     
+    [Column(TypeName = "char(3)")]
     public string CurrencyIso { get; set; }
+    
     [ForeignKey("CurrencyIso")]
     public Currency Currency { get; set; }
     public decimal Amount 

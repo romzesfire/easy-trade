@@ -24,7 +24,9 @@ public abstract class Trade //Datetime + timezone
 public class CurrencyTrade : Trade 
 {
     public TradeType TradeType { get; set; }
+    [Column(TypeName = "char(3)")]
     public string BuyCurrencyIso { get; set; }
+    [Column(TypeName = "char(3)")]
     public string SellCurrencyIso { get; set; }
     
     [ForeignKey("BuyCurrencyIso")]
