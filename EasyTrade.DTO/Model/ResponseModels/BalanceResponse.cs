@@ -4,7 +4,7 @@ namespace EasyTrade.Service.Model.ResponseModels;
 
 public class BalanceResponse
 {
-    public uint Id { get; set; }
+    public int Id { get; set; }
     public CurrencyResponse Currency { get; set; }
     public decimal Amount { get; set; }
 

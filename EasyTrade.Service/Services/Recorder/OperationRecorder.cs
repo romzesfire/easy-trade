@@ -31,7 +31,7 @@ public class OperationRecorder : IDataRecorder<UpdateBalanceModel>
         };
         _locker.ConcurrentExecute(() =>
         {
-            _db.AddOperation(operation);
+            _db.AddOperations(operation);
             _db.SaveChanges();
         }, ccy);
     }

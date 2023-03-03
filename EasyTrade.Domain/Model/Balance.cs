@@ -7,7 +7,7 @@ namespace EasyTrade.Domain.Model;
 public class Balance
 {
     private decimal amount;
-    public uint Id { get; set; }
+    public int Id { get; set; }
     [ConcurrencyCheck]
     public Guid Version { get; set; }
     

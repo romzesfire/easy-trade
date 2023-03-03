@@ -1,5 +1,6 @@
 using EasyTrade.Domain.Exception;
 using EasyTrade.Domain.Model;
+using EasyTrade.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.DAL.DatabaseContext;
@@ -31,41 +32,22 @@ public class EasyTradeDbContext : DbContext
 
     public void AddOperations(params Operation[] operations)
     {
-        foreach (var operation in operations)
+        var ccys = operations.Select(o => o.Currency).Distinct();
+        foreach (var ccy in ccys)
         {
-            AddOperation(operation);
+            AddOperation(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy);
         }
     }
     
     
-    public void AddOperation(Operation operation)
+    public void AddOperation(IEnumerable<Operation> operations, Currency ccy)
     {
-        var sum = GetSumOfOperations(operation.Currency);
-        sum += operation.Amount;
-        if (sum < 0)
-        {
-            throw new NotEnoughAssetsException(operation.Currency.IsoCode);
-        }
-        Operations.Add(operation);
-        var balance = Balances.Include(b=>b.Currency)
-            .FirstOrDefault(b=>b.Currency.IsoCode == operation.Currency.IsoCode);
-        
-        if (balance == null)
-        {
-            throw new AccountCurrencyNotFoundException(operation.Currency.IsoCode);
-        }
-        balance.Amount = sum;
-        balance.Version = Guid.NewGuid();
-    }
+        var balance = Balances.FirstOrDefault(b=>b.CurrencyIso == ccy.IsoCode);
+        balance = Calculator.CalculateBalance(balance, operations, ccy);
+        Operations.AddRange(operations);
 
-    internal decimal GetSumOfOperations(Currency ccy)
-    {
-        var operations = Operations.Include(b => b.Currency)
-            .Where(b => b.Currency.IsoCode == ccy.IsoCode).ToList();
-            
-        var sum = operations.Sum(o=>o.Amount);
-        return sum;
-         
+        if (balance.Id == -1)
+            Balances.AddRange(balance);
     }
 
 
