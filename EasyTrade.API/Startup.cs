@@ -76,6 +76,7 @@ public class Startup
             _app.UseSwaggerUI();
         }
 
+        _app.UseMiddleware<RequestDurationMiddleware>();
         _app.UseHttpsRedirection();
 
         _app.UseAuthorization();
