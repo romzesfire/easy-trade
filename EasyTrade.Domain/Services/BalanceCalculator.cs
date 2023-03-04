@@ -1,11 +1,16 @@
+using EasyTrade.Domain.Abstractions;
 using EasyTrade.Domain.Exception;
 using EasyTrade.Domain.Model;
 
 namespace EasyTrade.Domain.Services;
 
-public static class Calculator
+public class BalanceCalculator : IBalanceCalculator
 {
-    public static Balance CalculateBalance(Balance balance, IEnumerable<Operation> operations, Currency ccy)
+    public BalanceCalculator()
+    {
+        
+    }
+    public Balance Calculate(Balance balance, IEnumerable<Operation> operations, Currency ccy)
     {
         var sum = operations.Sum(o => o.Amount);
         if (balance == null)
@@ -18,6 +23,8 @@ public static class Calculator
         {
             throw new NotEnoughAssetsException(operations.First().Currency.IsoCode);
         }
+
+        balance.Amount = sum;
         balance.Version = Guid.NewGuid();
         return balance;
     }

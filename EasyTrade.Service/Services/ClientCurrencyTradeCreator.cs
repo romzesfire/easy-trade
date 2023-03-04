@@ -1,9 +1,9 @@
 
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.Domain.Abstractions;
 using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
-using EasyTrade.DTO.Model.Repository;
 
 namespace EasyTrade.Service.Services;
 
@@ -13,16 +13,21 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _currencyRepository;
     private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
-    private ILocker _locker;
+    private readonly ILocker _locker;
+    private readonly IOperationRecorder _operationRecorder;
+    private readonly IPriceMarkupCalculator _priceMarkupCalculator;
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
         ILocker locker, EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
-        IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository)
+        IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository,
+        IOperationRecorder operationRecorder, IDomainCalculationProvider calculationProvider)
     {
         _brokerTradeCreator = brokerTradeCreator;
+        _priceMarkupCalculator = calculationProvider.Get<IPriceMarkupCalculator>();
         _coefficientRepository = coefficientRepository;
         _db = dbContext;
         _currencyRepository = currencyRepository;
         _locker = locker;
+        _operationRecorder = operationRecorder;
     }
 
     public void Create(BuyTradeCreationModel tradeModel)
@@ -33,7 +38,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
-        sellAmount *= c;
+        sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
         
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
         _locker.ConcurrentExecute(() =>
@@ -89,7 +94,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
             Amount = tradeModel.BuyAmount,
             DateTime = tradeModel.DateTime
         };
-        _db.AddOperations(buyOperation, sellOperation);
+        _operationRecorder.Record(new [] { buyOperation, sellOperation });
     }
     
     private ClientCurrencyTrade CreateClientTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
