@@ -1,9 +1,6 @@
 using EasyTrade.DAL.DatabaseContext;
-using EasyTrade.DAL.Repository;
-using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
-using EasyTrade.DTO.Model.Repository;
 using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Services;
 using EasyTrade.Service.Services.Recorder;
@@ -40,13 +37,7 @@ public static class ServicesExtensions
             {
                 o.UseNpgsql(connectionString);
             })
-            .AddScoped<IRepository<Operation, int>, OperationsRepository>()
-            .AddScoped<IRepository<Currency, string>, CurrencyRepository>()
-            .AddScoped<IRepository<Balance, string>, BalanceRepository>()
-            .AddScoped<IRepository<CurrencyTradeCoefficient, (string?, string?)>,
-                CurrencyTradeCoefficientRepository>()
-            .AddScoped<IRepository<ClientCurrencyTrade, int>, CurrencyTradeRepository>()
-            .AddScoped<IDataRecorder<UpdateBalanceModel>, OperationRecorder>()
+            .AddScoped<IOperationRecorder, OperationRecorder>()
             .AddScoped<IDataRecorder<UpdateCurrencyTradeCoefficientModel>, CurrencyTradeCoefficientRecorder>();
         return services;
     }
