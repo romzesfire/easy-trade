@@ -2,7 +2,6 @@ using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
-using EasyTrade.DTO.Model.Repository;
 
 namespace EasyTrade.Service.Services.Recorder;
 
