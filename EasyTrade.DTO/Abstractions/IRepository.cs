@@ -1,4 +1,4 @@
-namespace EasyTrade.DTO.Model.Repository;
+namespace EasyTrade.DTO.Abstractions;
 
 public interface IRepository<TEnt, in TId> where TEnt : class
 {

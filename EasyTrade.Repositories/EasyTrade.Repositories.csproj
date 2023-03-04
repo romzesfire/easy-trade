@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EasyTrade.DAL\EasyTrade.DAL.csproj" />
+      <ProjectReference Include="..\EasyTrade.Domain\EasyTrade.Domain.csproj" />
+      <ProjectReference Include="..\EasyTrade.DTO\EasyTrade.DTO.csproj" />
+    </ItemGroup>
+
+</Project>

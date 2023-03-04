@@ -1,9 +1,9 @@
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.Domain.Exception;
 using EasyTrade.Domain.Model;
-using EasyTrade.DTO.Model.Repository;
+using EasyTrade.DTO.Abstractions;
 
-namespace EasyTrade.DAL.Repository;
+namespace EasyTrade.Repositories.Repository;
 
 public class CurrencyRepository : IRepository<Currency, string>
 {

@@ -1,9 +1,9 @@
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.Domain.Model;
-using EasyTrade.DTO.Model.Repository;
+using EasyTrade.DTO.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace EasyTrade.DAL.Repository;
+namespace EasyTrade.Repositories.Repository;
 
 public class BalanceRepository : IRepository<Balance, string>
 {
