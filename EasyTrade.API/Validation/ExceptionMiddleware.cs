@@ -6,9 +6,13 @@ public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
     private Dictionary<Type, ValidationOptions> _validationOptions;
-    public ExceptionMiddleware(RequestDelegate next, IValidationOptionsProvider validationOptionsProvider)
+    private readonly ILogger<ExceptionMiddleware> _logger;
+
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger,
+        IValidationOptionsProvider validationOptionsProvider)
     {
         _next = next;
+        _logger = logger;
         _validationOptions = validationOptionsProvider.Get();
     }
     
@@ -20,6 +24,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             await HandleExceptionAsync(httpContext, ex);
         }
     }

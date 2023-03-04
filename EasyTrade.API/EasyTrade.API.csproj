@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\EasyTrade.DAL\EasyTrade.DAL.csproj" />
       <ProjectReference Include="..\EasyTrade.DTO\EasyTrade.DTO.csproj" />
+      <ProjectReference Include="..\EasyTrade.Repositories\EasyTrade.Repositories.csproj" />
       <ProjectReference Include="..\EasyTrade.Service\EasyTrade.Service.csproj" />
     </ItemGroup>
 

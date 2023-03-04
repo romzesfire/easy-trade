@@ -7,7 +7,7 @@ namespace EasyTrade.Repositories.Extensions;
 
 public static class RepositoriessExtensions
 {
-    public static IServiceCollection AddRepositories(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepository<Operation, int>, OperationsRepository>()
             .AddScoped<IRepository<Currency, string>, CurrencyRepository>()

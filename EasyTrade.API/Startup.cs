@@ -4,6 +4,7 @@ using EasyTrade.API.Validation;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.Domain.Extensions;
+using EasyTrade.Repositories.Extensions;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.Service.Configuration;
@@ -53,6 +54,7 @@ public class Startup
         _builder.Services.AddQuotesProvider(_configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
             .AddValidationOptions()
             .AddDomainServices()
+            .AddRepositories()
             .AddLocalCurrenciesProvider()
             .AddScoped<IOperationProvider, OperationDbProvider>()
             .Configure<LockerConfiguration>(_configuration.GetSection("Locker"))
