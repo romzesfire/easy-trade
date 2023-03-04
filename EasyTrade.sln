@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.DTO", "EasyTrade.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.Domain", "EasyTrade.Domain\EasyTrade.Domain.csproj", "{D7B3EACC-C540-4A41-AEB0-71EDEB2E528B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTrade.Repositories", "EasyTrade.Repositories\EasyTrade.Repositories.csproj", "{09C4D830-DCA8-46F8-8689-35C56B8B666C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{D7B3EACC-C540-4A41-AEB0-71EDEB2E528B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B3EACC-C540-4A41-AEB0-71EDEB2E528B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7B3EACC-C540-4A41-AEB0-71EDEB2E528B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C4D830-DCA8-46F8-8689-35C56B8B666C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C4D830-DCA8-46F8-8689-35C56B8B666C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C4D830-DCA8-46F8-8689-35C56B8B666C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C4D830-DCA8-46F8-8689-35C56B8B666C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
