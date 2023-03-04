@@ -1,6 +1,5 @@
-using EasyTrade.Domain.Exception;
+using EasyTrade.Domain.Abstractions;
 using EasyTrade.Domain.Model;
-using EasyTrade.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.DAL.DatabaseContext;
@@ -22,34 +21,12 @@ public class EasyTradeDbContext : DbContext
     public DbSet<Balance> Balances { get; set; } = null!;
     public EasyTradeDbContext(DbContextOptions<EasyTradeDbContext> options) : base(options)
     {
-
     }
 
     public void AddTrade(ClientCurrencyTrade currencyTrade)
     {
         ClientTrades.Add(currencyTrade);
     }
-
-    public void AddOperations(params Operation[] operations)
-    {
-        var ccys = operations.Select(o => o.Currency).Distinct();
-        foreach (var ccy in ccys)
-        {
-            AddOperation(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy);
-        }
-    }
-    
-    
-    public void AddOperation(IEnumerable<Operation> operations, Currency ccy)
-    {
-        var balance = Balances.FirstOrDefault(b=>b.CurrencyIso == ccy.IsoCode);
-        balance = Calculator.CalculateBalance(balance, operations, ccy);
-        Operations.AddRange(operations);
-
-        if (balance.Id == -1)
-            Balances.AddRange(balance);
-    }
-
 
     // protected override void OnModelCreating(ModelBuilder modelBuilder)
     // {
