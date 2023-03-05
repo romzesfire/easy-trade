@@ -10,7 +10,6 @@ public class OperationRecorder : IOperationRecorder
 {
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _ccyRepository;
-    private IRepository<Balance, string> _balanceRepository;
     private ILocker _locker;
     private IBalanceCalculator _balanceCalculator;
     public OperationRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
@@ -20,9 +19,8 @@ public class OperationRecorder : IOperationRecorder
         _balanceCalculator = calculationProvider.Get<IBalanceCalculator>();
         _locker = locker;
         _ccyRepository = ccyRepository;
-        _balanceRepository = balanceRepository;
     }
-    public void Record(UpdateBalanceModel data)
+    public async Task Record(UpdateBalanceModel data)
     {
         var ccy = _ccyRepository.Get(data.IsoCode);
         var operation = new Operation()
@@ -31,16 +29,17 @@ public class OperationRecorder : IOperationRecorder
             DateTime = data.DateTime,
             Amount = data.Amount
         };
-        Record(new [] { operation });
+        await Record(new [] { operation });
+        await _db.SaveChangesAsync();
     }
 
-    public void Record(IEnumerable<Operation> operations)
+    public async Task Record(IEnumerable<Operation> operations)
     {
         var ccys = operations.Select(o => o.Currency).Distinct();
         foreach (var ccy in ccys)
         {
             var balance = _db.Balances.FirstOrDefault(b=>b.CurrencyIso == ccy.IsoCode);
-            _locker.ConcurrentExecute(() => 
+            await _locker.ConcurrentExecuteAsync(() => 
                     AddOneCcyOperations(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy, balance),
                     balance
                 );

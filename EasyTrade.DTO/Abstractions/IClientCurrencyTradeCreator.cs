@@ -5,6 +5,6 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface IClientCurrencyTradeCreator
 {
-    public void Create(BuyTradeCreationModel tradeModel);
-    public void Create(SellTradeCreationModel tradeModel);
+    public Task Create(BuyTradeCreationModel tradeModel);
+    public Task Create(SellTradeCreationModel tradeModel);
 }

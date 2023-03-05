@@ -30,10 +30,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         _operationRecorder = operationRecorder;
     }
 
-    public void Create(BuyTradeCreationModel tradeModel)
+    public async Task Create(BuyTradeCreationModel tradeModel)
     {
         var (buyCcy, sellCcy) = GetCurrencies(tradeModel);
-        var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
+        var brokerTrade = await _brokerTradeCreator.CreateAsync(tradeModel, buyCcy, sellCcy);
         
         var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
@@ -41,7 +41,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
         
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-        _locker.ConcurrentExecute(() =>
+        await _locker.ConcurrentExecuteAsync(() =>
             {
                 AddBalances(clientTrade);
                 _db.AddTrade(clientTrade);
@@ -51,10 +51,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         );
     }
     
-    public void Create(SellTradeCreationModel tradeModel)
+    public async Task Create(SellTradeCreationModel tradeModel)
     {
         (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
-        var brokerTrade = _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
+        var brokerTrade = await _brokerTradeCreator.CreateAsync(tradeModel, buyCcy, sellCcy);
         
         var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
@@ -62,7 +62,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         buyAmount /= c;
 
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-         _locker.ConcurrentExecute(() =>
+        await _locker.ConcurrentExecuteAsync(() =>
              {
                  AddBalances(clientTrade);
                  _db.AddTrade(clientTrade);

@@ -37,4 +37,9 @@ public class OptimisticLocker : ILocker
             }
         }
     }
+
+    public async Task ConcurrentExecuteAsync(Action func, object lockObject)
+    {
+        await Task.Run(() => ConcurrentExecute(func, lockObject));
+    }
 }

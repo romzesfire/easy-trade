@@ -16,7 +16,7 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
 
     }
 
-    public void Record(UpdateCurrencyTradeCoefficientModel data)
+    public async Task Record(UpdateCurrencyTradeCoefficientModel data)
     {
         var firstCcy = _ccyRepository.Get(data.FirstIsoCode);
         var secondCcy = _ccyRepository.Get(data.SecondIsoCode);
@@ -30,7 +30,7 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
         };
 
         _db.Coefficients.Add(c);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
     }
 
 }

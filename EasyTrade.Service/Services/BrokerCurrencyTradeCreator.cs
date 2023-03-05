@@ -32,4 +32,14 @@ public class BrokerCurrencyTradeCreator : IBrokerCurrencyTradeCreator
         return new BrokerCurrencyTrade(buyCcy, sellCcy,  
                 buyAmount, tradeModel.SellCount, tradeModel.DateTime, TradeType.Sell);
     }
+
+    public async Task<BrokerCurrencyTrade> CreateAsync(BuyTradeCreationModel tradeModel, Currency buyCcy, Currency sellCcy)
+    {
+        return await Task.Run(() => Create(tradeModel, buyCcy, sellCcy));
+    }
+
+    public async Task<BrokerCurrencyTrade> CreateAsync(SellTradeCreationModel tradeModel, Currency buyCcy, Currency sellCcy)
+    {
+        return await Task.Run(() => Create(tradeModel, buyCcy, sellCcy));
+    }
 }

@@ -20,19 +20,19 @@ public class ClientTradeController : ControllerBase
         _currencyTradesProvider = currencyTradesProvider;
     }
 
-    [HttpPost("Buy")]//Buy, Sell
-    public IActionResult Buy(BuyTradeCreationModel buyModel)
+    [HttpPost("Buy")]
+    public async Task<IActionResult> Buy(BuyTradeCreationModel buyModel)
     {
         //FluentValidator
         //CQRS
-        _tradeCreator.Create(buyModel);
+        await _tradeCreator.Create(buyModel);
         return Ok();
     }
     
-    [HttpPost("Sell")]//Buy, Sell
-    public IActionResult Sell(SellTradeCreationModel sellModel)
+    [HttpPost("Sell")]
+    public async Task<IActionResult> Sell(SellTradeCreationModel sellModel)
     {
-        _tradeCreator.Create(sellModel);
+        await _tradeCreator.Create(sellModel);
         return Ok();
     }
     

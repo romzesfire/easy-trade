@@ -10,7 +10,7 @@ public class ValidationOptionsProvider : IValidationOptionsProvider
 
     public ValidationOptionsProvider()
     {
-        _options = new Dictionary<Type, ValidationOptions>()
+        _options = new Dictionary<Type, ValidationOptions>(new TypeComparer())
         {
             {
                 typeof(CurrencyNotFoundException), 

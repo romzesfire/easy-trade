@@ -24,16 +24,16 @@ public class AdministratorController : ControllerBase
     }
     
     [HttpPost("ReplenishBalance")]
-    public IActionResult ReplenishBalance(UpdateBalanceModel balanceModel)
+    public async Task<IActionResult> ReplenishBalance(UpdateBalanceModel balanceModel)
     {
-        _updateBalance.Record(balanceModel);
+        await _updateBalance.Record(balanceModel);
         return Ok();
     }
 
     [HttpPost("UpdateCoefficient")]
-    public IActionResult UpdateCurrencyTradeCoefficient(UpdateCurrencyTradeCoefficientModel updateCoefficientModel)
+    public async Task<IActionResult> UpdateCurrencyTradeCoefficient(UpdateCurrencyTradeCoefficientModel updateCoefficientModel)
     {
-        _updateCcyTradeCoefficient.Record(updateCoefficientModel);
+        await _updateCcyTradeCoefficient.Record(updateCoefficientModel);
         return Ok();
     }
 
