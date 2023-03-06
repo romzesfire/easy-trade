@@ -72,7 +72,7 @@ INSERT INTO "Currencies" ("Id", "Name", "IsoCode") VALUES (7, 'Dollar canadien',
 INSERT INTO "Currencies" ("Id", "Name", "IsoCode") VALUES (8, 'Swiss franc', 'CHF');
 INSERT INTO "Currencies" ("Id", "Name", "IsoCode") VALUES (9, 'Yuan', 'CNH');
 INSERT INTO "Coefficients" ("Coefficient", "DateTime") VALUES (1.2, now());
-INSERT INTO "Coefficients" ("Coefficient", "DateTime", "FirstCcyId", "SecondCcyId") VALUES (2.5, now(), 1, 2);
+INSERT INTO "Coefficients" ("Coefficient", "DateTime", "FirstCcyIsoCode", "SecondCcyIsoCode") VALUES (2.5, now(), 'USD', 'RUB');
 
 
 INSERT INTO "Balances" ("CurrencyIso", "Amount", "Version") VALUES ('RUB', 10000000, 'd8a2e553-fec8-4289-9d61-1cb82dbdb04b');
