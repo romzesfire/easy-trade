@@ -5,7 +5,7 @@ namespace EasyTrade.API.Validation;
 public class RequestDurationMiddleware
 {
     private readonly RequestDelegate _next;
-    private ILogger<RequestDurationMiddleware> _logger;
+    private readonly ILogger<RequestDurationMiddleware> _logger;
     public RequestDurationMiddleware(RequestDelegate next, ILogger<RequestDurationMiddleware> logger)
     {
         _next = next;
@@ -22,6 +22,4 @@ public class RequestDurationMiddleware
         _logger.LogInformation("Request method {method} {url} duration - {duration}ms", 
             httpContext.Request.Method, httpContext.Request.Path.ToString(), duration.ElapsedMilliseconds);
     }
-
-    
 }

@@ -6,7 +6,7 @@ namespace EasyTrade.Service.Services;
 
 public class CurrencyTradeCoefficientsProvider : ICurrencyTradeCoefficientsProvider
 {
-    private IRepository<CurrencyTradeCoefficient, (string?, string?)> _repo;
+    private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _repo;
     public CurrencyTradeCoefficientsProvider(IRepository<CurrencyTradeCoefficient, (string?, string?)> repo)
     {
         _repo = repo;

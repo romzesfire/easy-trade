@@ -15,7 +15,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
     private readonly ILocker _locker;
     private readonly IOperationRecorder _operationRecorder;
-    private readonly IPriceMarkupCalculator _priceMarkupCalculator;
+    private readonly IPriceMarkupCalculator? _priceMarkupCalculator;
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
         ILocker locker, EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
         IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository,

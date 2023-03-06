@@ -10,8 +10,8 @@ namespace EasyTrade.API.Controllers;
 public class ClientTradeController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;
-    private IClientCurrencyTradeCreator _tradeCreator;
-    public ICurrencyTradesProvider _currencyTradesProvider;
+    private readonly IClientCurrencyTradeCreator _tradeCreator;
+    private readonly ICurrencyTradesProvider _currencyTradesProvider;
     public ClientTradeController(ILogger<ClientTradeController> logger,
         IClientCurrencyTradeCreator tradeCreator, ICurrencyTradesProvider currencyTradesProvider)
     {

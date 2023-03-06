@@ -9,7 +9,7 @@ namespace EasyTrade.Service.Services;
 public class BrokerCurrencyTradeCreator : IBrokerCurrencyTradeCreator
 {
     private readonly IQuotesProvider _quotesProvider;
-    private readonly IQuotesCalculator _quotesCalculator;
+    private readonly IQuotesCalculator? _quotesCalculator;
     public BrokerCurrencyTradeCreator(IQuotesProvider quotesProvider, IDomainCalculationProvider calculationProvider)
     {
         _quotesProvider = quotesProvider;

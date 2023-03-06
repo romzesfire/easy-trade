@@ -11,7 +11,7 @@ namespace EasyTrade.Service.Services;
 
 public class OptimisticLocker : ILocker
 {
-    private RetryPolicy _retryPolicy;
+    private readonly RetryPolicy _retryPolicy;
     public OptimisticLocker(IOptions<LockerConfiguration> config)
     {
         var delay = Backoff

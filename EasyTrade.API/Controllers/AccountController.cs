@@ -9,7 +9,7 @@ namespace EasyTrade.API.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private IOperationProvider _operationProvider;
+    private readonly IOperationProvider _operationProvider;
     private readonly IBalanceProvider _balanceProvider;
 
     public AccountController(IOperationProvider operationProvider, IBalanceProvider balanceProvider)

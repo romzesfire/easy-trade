@@ -4,7 +4,7 @@ namespace EasyTrade.Domain.Services;
 
 public class DomainCalculatorProvider : IDomainCalculationProvider
 {
-    private IEnumerable<ICalculator> _calculators;
+    private readonly IEnumerable<ICalculator> _calculators;
     public DomainCalculatorProvider()
     {
         _calculators = new List<ICalculator>
@@ -14,7 +14,7 @@ public class DomainCalculatorProvider : IDomainCalculationProvider
             new QuotesCalculator()
         };
     }
-    public T Get<T>()
+    public T? Get<T>()
     {
         return _calculators.OfType<T>().FirstOrDefault();
     } 

@@ -10,10 +10,10 @@ public class OperationRecorder : IOperationRecorder
 {
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _ccyRepository;
-    private ILocker _locker;
-    private IBalanceCalculator _balanceCalculator;
+    private readonly ILocker _locker;
+    private readonly IBalanceCalculator? _balanceCalculator;
     public OperationRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
-        IRepository<Balance, string> balanceRepository, ILocker locker, IDomainCalculationProvider calculationProvider)
+         ILocker locker, IDomainCalculationProvider calculationProvider)
     {
         _db = db;
         _balanceCalculator = calculationProvider.Get<IBalanceCalculator>();
