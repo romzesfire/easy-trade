@@ -321,7 +321,7 @@ public class BalanceCalculatorTests
     }
 
     [Test]
-    [TestCaseSource("ValidTestCases")]
+    [TestCaseSource(nameof(ValidTestCases))]
     public void CalculateValidTests(BalanceCalculatorModelValid calculatorModelValid)
     {
         var calculator = new BalanceCalculator();
@@ -334,7 +334,7 @@ public class BalanceCalculatorTests
     
     
     [Test]
-    [TestCaseSource("InvalidTestCases")]
+    [TestCaseSource(nameof(InvalidTestCases))]
     public void CalculateInvalidTests(BalanceCalculatorModel calculatorModelValid)
     {
         var calculator = new BalanceCalculator();

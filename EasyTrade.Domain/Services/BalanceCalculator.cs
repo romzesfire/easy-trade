@@ -10,7 +10,7 @@ public class BalanceCalculator : IBalanceCalculator
     {
         
     }
-    public Balance Calculate(Balance balance, IEnumerable<Operation> operations, Currency ccy)
+    public Balance Calculate(Balance? balance, IEnumerable<Operation> operations, Currency ccy)
     {
         var sum = operations.Sum(o => o.Amount);
         if (balance == null)
