@@ -14,6 +14,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+        <PackageReference Include="Moq" Version="4.18.4" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
@@ -24,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyTrade.Domain\EasyTrade.Domain.csproj" />
+      <ProjectReference Include="..\EasyTrade.Service\EasyTrade.Service.csproj" />
     </ItemGroup>
 
 </Project>
