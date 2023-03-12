@@ -13,13 +13,14 @@ public class CurrenciesProvider : ICurrenciesProvider
         _ccyProvider = ccyProvider;
     }
 
-    public IEnumerable<CurrencyResponse> GetCurrencies(int limit, int offset)
+    public (IEnumerable<CurrencyResponse>, int) GetCurrencies(int limit, int offset)
     {
-        return _ccyProvider.GetLimited(limit, offset).Item1.Select(c=>(CurrencyResponse)c);
+        var result = _ccyProvider.GetLimited(limit, offset);
+        return (result.Item1.Select(c=>(CurrencyResponse)c), result.Item2);
     }
 
-    public CurrencyResponse GetCurrency(string isoCode)
+    public async Task<CurrencyResponse> GetCurrency(string isoCode)
     {
-        return (CurrencyResponse)_ccyProvider.Get(isoCode);
+        return (CurrencyResponse) await _ccyProvider.Get(isoCode);
     }
 }

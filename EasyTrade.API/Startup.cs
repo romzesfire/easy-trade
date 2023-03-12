@@ -10,6 +10,7 @@ using EasyTrade.DTO.Model;
 using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Extensions;
 using EasyTrade.Service.Services;
+using EasyTrade.Service.Services.Cache;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.API;
@@ -55,7 +56,9 @@ public class Startup
             .AddValidationOptions()
             .AddDomainServices()
             .AddRepositories()
+            .AddMemoryCache()
             .AddLocalCurrenciesProvider()
+            .AddSingleton<ICacheServiceFactory, CacheServiceFactory>()
             .AddScoped<IOperationProvider, OperationDbProvider>()
             .Configure<LockerConfiguration>(_configuration.GetSection("Locker"))
             .AddScoped<ICurrencyTradesProvider, CurrencyTradesDbProvider>()

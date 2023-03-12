@@ -13,12 +13,12 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
         _db = db;
     }
 
-    public IEnumerable<CurrencyTradeCoefficient> GetAll()
+    public async Task<IEnumerable<CurrencyTradeCoefficient>> GetAll()
     {
-        return _db.Coefficients
+        return await _db.Coefficients
             .Include(c=>c.FirstCcy)
             .Include(c=>c.SecondCcy)
-            .ToList();
+            .ToListAsync();
     }
 
     public (IEnumerable<CurrencyTradeCoefficient>, int) GetLimited(int limit, int offset)
@@ -29,21 +29,21 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
             .ToList(), _db.Coefficients.Count());
     }
 
-    public CurrencyTradeCoefficient Get((string?, string?) id)
+    public async Task<CurrencyTradeCoefficient> Get((string?, string?) id)
     {
-        var c = _db.Coefficients.Include(c => c.FirstCcy)
-            .Include(c => c.SecondCcy)
-            .Where(c 
-                => (id.Item2 == null && id.Item1 == null && c.FirstCcy == null && c.SecondCcy == null) ||
-                   (c.FirstCcy.IsoCode == id.Item1 && c.SecondCcy.IsoCode == id.Item2) ||
-                   (c.FirstCcy.IsoCode == id.Item2 && c.SecondCcy.IsoCode == id.Item1))
-            .OrderByDescending(c=>c.DateTime).FirstOrDefault();
-        if (c == null)
-            return _db.Coefficients.Include(c => c.FirstCcy)
-                .Include(c => c.SecondCcy)
-                .Where(c
-                    => c.FirstCcy == null && c.SecondCcy == null)
-                .OrderByDescending(c=>c.DateTime).First();
-        return c;
+        var coefficient = await _db.Coefficients.Include(cf => cf.FirstCcy)
+            .Include(cf => cf.SecondCcy)
+            .Where(cf 
+                => (id.Item2 == null && id.Item1 == null && cf.FirstCcy == null && cf.SecondCcy == null) ||
+                   (cf.FirstCcy.IsoCode == id.Item1 && cf.SecondCcy.IsoCode == id.Item2) ||
+                   (cf.FirstCcy.IsoCode == id.Item2 && cf.SecondCcy.IsoCode == id.Item1))
+            .OrderByDescending(c=>c.DateTime).FirstOrDefaultAsync();
+        if (coefficient == null)
+            return await _db.Coefficients.Include(cf => cf.FirstCcy)
+                .Include(cf => cf.SecondCcy)
+                .Where(cf
+                    => cf.FirstCcy == null && cf.SecondCcy == null)
+                .OrderByDescending(cf=>cf.DateTime).FirstAsync();
+        return coefficient;
     }
 }

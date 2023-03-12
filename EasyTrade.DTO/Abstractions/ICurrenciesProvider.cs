@@ -5,6 +5,6 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface ICurrenciesProvider
 {
-    public IEnumerable<CurrencyResponse> GetCurrencies(int limit, int offset);
-    public CurrencyResponse GetCurrency(string isoCode);
+    public (IEnumerable<CurrencyResponse>, int) GetCurrencies(int limit, int offset);
+    public Task<CurrencyResponse> GetCurrency(string isoCode);
 }

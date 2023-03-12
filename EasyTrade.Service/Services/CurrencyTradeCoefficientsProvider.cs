@@ -12,16 +12,16 @@ public class CurrencyTradeCoefficientsProvider : ICurrencyTradeCoefficientsProvi
         _repo = repo;
     }
 
-    public CurrencyTradeCoefficientResponse GetCoefficient(string? firstIso, string? secondIso)
+    public async Task<CurrencyTradeCoefficientResponse> GetCoefficient(string? firstIso, string? secondIso)
     {
-        var c = _repo.Get((firstIso, secondIso));
+        var c = await _repo.Get((firstIso, secondIso));
         return (CurrencyTradeCoefficientResponse)c;
     }
     
-    public IEnumerable<CurrencyTradeCoefficientResponse> GetCoefficientsLimit(int limit, int offset)
+    public (IEnumerable<CurrencyTradeCoefficientResponse>, int) GetCoefficientsLimit(int limit, int offset)
     {
-        var coefficients = _repo.GetLimited(limit, offset).Item1
-            .Select(c=>(CurrencyTradeCoefficientResponse)c);
-        return coefficients;
+        var result = _repo.GetLimited(limit, offset);
+        return (result.Item1
+            .Select(c=>(CurrencyTradeCoefficientResponse)c), result.Item2);
     }
 }

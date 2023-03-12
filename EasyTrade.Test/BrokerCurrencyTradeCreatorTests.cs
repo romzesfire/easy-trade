@@ -54,22 +54,22 @@ public class BrokerCurrencyTradeCreatorTests
     
     [Test]
     [TestCaseSource(nameof(SellCases))]
-    public void SellTradeCreationTest(BrokerCurrencySellTradeCreatorModel creatorModel)
+    public async Task SellTradeCreationTests(BrokerCurrencySellTradeCreatorModel creatorModel)
     {
         var brokerTradeCreator = new BrokerCurrencyTradeCreator(creatorModel.QuotesProvider.Object,
             creatorModel.DomainCalculatorProvider);
-        var trade = brokerTradeCreator.Create(creatorModel.TradeCreationModel, creatorModel.BuyCurrency, creatorModel.SellCurrency);
+        var trade = await brokerTradeCreator.Create(creatorModel.TradeCreationModel, creatorModel.BuyCurrency, creatorModel.SellCurrency);
         Assert.That(trade.BuyAmount == creatorModel.BuyAmountResult, 
             $"Broker trade must contain {creatorModel.BuyAmountResult} buy amount, but it was {trade.BuyAmount}");
     }
     
     [Test]
     [TestCaseSource(nameof(BuyCases))]
-    public void BuyTradeCreationTest(BrokerCurrencyBuyTradeCreatorModel creatorModel)
+    public async Task BuyTradeCreationTests(BrokerCurrencyBuyTradeCreatorModel creatorModel)
     {
         var brokerTradeCreator = new BrokerCurrencyTradeCreator(creatorModel.QuotesProvider.Object,
             creatorModel.DomainCalculatorProvider);
-        var trade = brokerTradeCreator.Create(creatorModel.TradeCreationModel, creatorModel.BuyCurrency, creatorModel.SellCurrency);
+        var trade = await brokerTradeCreator.Create(creatorModel.TradeCreationModel, creatorModel.BuyCurrency, creatorModel.SellCurrency);
         Assert.That(trade.SellAmount == creatorModel.SellAmountResult, 
             $"Broker trade must contain {creatorModel.SellAmountResult} buy amount, but it was {trade.SellAmount}");
     }

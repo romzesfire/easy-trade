@@ -16,6 +16,6 @@ public class CacheOptions
 
     public static CacheOptions GetDefault()
     {
-        return new CacheOptions(5);
+        return new CacheOptions(TimeSpan.FromSeconds(30));
     }
 }

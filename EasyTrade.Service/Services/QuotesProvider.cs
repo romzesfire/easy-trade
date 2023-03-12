@@ -13,9 +13,9 @@ public class QuotesProvider : IQuotesProvider
         _api = api;
     }
 
-    public Quote Get(string from, string to)
+    public async Task<Quote> Get(string from, string to)
     {
-        var quote = _api.GetQuote(from, to, 1).Result;
+        var quote = await _api.GetQuote(from, to, 1);
         return new Quote(quote);
     }
 }

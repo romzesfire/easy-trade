@@ -25,7 +25,7 @@ public class EasyTradeDbContext : DbContext
 
     public void AddTrade(ClientCurrencyTrade currencyTrade)
     {
-        ClientTrades.Add(currencyTrade);
+         ClientTrades.Add(currencyTrade);
     }
 
     // protected override void OnModelCreating(ModelBuilder modelBuilder)

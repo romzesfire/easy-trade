@@ -14,10 +14,10 @@ public class BalanceRepository : IRepository<Balance, string>
         _db = db;
     }
 
-    public IEnumerable<Balance> GetAll()
+    public async Task<IEnumerable<Balance>> GetAll()
     {
-        return _db.Balances
-            .Include(b => b.Currency).ToList();
+        return await _db.Balances
+            .Include(b => b.Currency).ToListAsync();
     }
 
     public (IEnumerable<Balance>, int) GetLimited(int limit, int offset)
@@ -26,10 +26,10 @@ public class BalanceRepository : IRepository<Balance, string>
             .Include(b => b.Currency).ToList(), _db.Operations.Count());
     }
 
-    public Balance Get(string id)
+    public async Task<Balance> Get(string id)
     {
-        var balance = _db.Balances.Include(b => b.Currency)
-            .FirstOrDefault(b => b.Currency.IsoCode == id);
+        var balance = await _db.Balances.Include(b => b.Currency)
+            .FirstOrDefaultAsync(b => b.Currency.IsoCode == id);
 
         return balance;
     }

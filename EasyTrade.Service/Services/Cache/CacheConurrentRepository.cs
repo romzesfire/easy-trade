@@ -5,19 +5,18 @@ namespace EasyTrade.Service.Services.Cache;
 public class CacheConcurrentRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
 {
     private readonly ConcurrentDictionary<TId, CacheEntityModel<TEnt>> _cache;
-    private readonly Func<TId, TEnt> _getter;
-    public CacheConcurrentRepository(Func<TId, TEnt> getter)
+    private Func<TId, TEnt> _getter;
+    public CacheConcurrentRepository()
     {
         _cache = new ConcurrentDictionary<TId, CacheEntityModel<TEnt>>();
-        _getter = getter;
     }
-    public TEnt Get(TId id)
+    public TEnt Get(TId id, Func<TId, TEnt> getter)
     {
-        var entity = _cache.GetOrAdd(id, Add);
-        if(!entity.IsValid())
-            _cache.AddOrUpdate(id, Add, Update);
-        
-        return _cache.GetOrAdd(id, Add).GetEntity();
+        _getter = getter;
+        var entity = _cache.AddOrUpdate(id, Add, Update);
+        if (entity.IsValid())
+            return entity.GetEntity();
+        return entity.GetEntity();
     }
 
     private CacheEntityModel<TEnt> Update(TId id, CacheEntityModel<TEnt> entity)
@@ -30,5 +29,10 @@ public class CacheConcurrentRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
     private CacheEntityModel<TEnt> Add(TId id)
     {
         return new CacheEntityModel<TEnt>(_getter.Invoke(id));
+    }
+
+    public void Clear()
+    {
+        _cache.Clear();
     }
 }

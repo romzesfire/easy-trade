@@ -18,8 +18,8 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
 
     public async Task Record(UpdateCurrencyTradeCoefficientModel data)
     {
-        var firstCcy = _ccyRepository.Get(data.FirstIsoCode);
-        var secondCcy = _ccyRepository.Get(data.SecondIsoCode);
+        var firstCcy = await _ccyRepository.Get(data.FirstIsoCode);
+        var secondCcy = await _ccyRepository.Get(data.SecondIsoCode);
 
         var c = new CurrencyTradeCoefficient()
         {

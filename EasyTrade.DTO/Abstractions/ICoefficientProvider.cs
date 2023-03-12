@@ -4,5 +4,5 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface ICoefficientProvider
 {
-    public TradeCoefficient GetCoefficient(TradeOperation operation);
+    public Task<TradeCoefficient> GetCoefficient(TradeOperation operation);
 }

@@ -1,6 +1,11 @@
 namespace EasyTrade.Service.Services.Cache;
 
-public interface ICacheRepository<out TEnt, in TId>
+public interface ICacheRepository
 {
-    public TEnt Get(TId id);
+    public void Clear();
+}
+
+public interface ICacheRepository<TEnt, TId> : ICacheRepository
+{
+    public TEnt Get(TId id, Func<TId, TEnt> getter);
 }

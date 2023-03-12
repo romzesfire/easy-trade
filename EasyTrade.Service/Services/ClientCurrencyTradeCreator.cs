@@ -32,10 +32,11 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
 
     public async Task Create(BuyTradeCreationModel tradeModel)
     {
-        var (buyCcy, sellCcy) = GetCurrencies(tradeModel);
-        var brokerTrade = await _brokerTradeCreator.CreateAsync(tradeModel, buyCcy, sellCcy);
+        var (buyCcy, sellCcy) = await GetCurrencies(tradeModel);
+        var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
+        var coefficientModel = await _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode));
+        var c = coefficientModel.Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
         sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
@@ -53,10 +54,11 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     
     public async Task Create(SellTradeCreationModel tradeModel)
     {
-        (var buyCcy, var sellCcy) = GetCurrencies(tradeModel);
-        var brokerTrade = await _brokerTradeCreator.CreateAsync(tradeModel, buyCcy, sellCcy);
+        (var buyCcy, var sellCcy) = await GetCurrencies(tradeModel);
+        var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var c = _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode)).Coefficient;
+        var coefficientModel = await _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode));
+        var c = coefficientModel.Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
         buyAmount /= c;
@@ -72,10 +74,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
          );
     }
 
-    private (Currency?, Currency?) GetCurrencies(TradeCreationModel tradeModel)
+    private async Task<(Currency?, Currency?)> GetCurrencies(TradeCreationModel tradeModel)
     {
-        var buyCcy = _currencyRepository.Get(tradeModel.BuyCurrency);
-        var sellCcy = _currencyRepository.Get(tradeModel.SellCurrency);
+        var buyCcy = await _currencyRepository.Get(tradeModel.BuyCurrency);
+        var sellCcy = await _currencyRepository.Get(tradeModel.SellCurrency);
 
         return (buyCcy, sellCcy);
     }

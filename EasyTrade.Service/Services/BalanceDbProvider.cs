@@ -12,9 +12,9 @@ public class BalanceDbProvider : IBalanceProvider
         _balanceRepository = balanceRepository;
     }
 
-    public BalanceResponse GetBalance(string currencyIsoCode)
+    public async Task<BalanceResponse> GetBalance(string currencyIsoCode)
     {
-        var balance = _balanceRepository.Get(currencyIsoCode);
+        var balance = await _balanceRepository.Get(currencyIsoCode);
         var balanceResponse = (BalanceResponse)balance;
         return balanceResponse;
     }

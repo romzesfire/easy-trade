@@ -5,5 +5,5 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface IOperationRecorder : IDataRecorder<UpdateBalanceModel>
 {
-    public Task Record(IEnumerable<Operation> operations);
+    public void Record(IEnumerable<Operation> operations);
 }

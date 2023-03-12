@@ -11,9 +11,9 @@ public class OperationDbProvider : IOperationProvider
     {
         _balanceRepository = balanceRepository;
     }
-    public OperationResponse GetOperation(int id)
+    public async Task<OperationResponse> GetOperation(int id)
     {
-        return (OperationResponse)_balanceRepository.GetAll().First(b=>b.Id == id);
+        return (OperationResponse) await _balanceRepository.Get(id);
     }
 
     public (IEnumerable<OperationResponse>, int) GetOperations(int limit, int offset)

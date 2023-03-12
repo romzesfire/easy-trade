@@ -4,6 +4,6 @@ namespace EasyTrade.DTO.Abstractions;
 
 public interface ICurrencyTradeCoefficientsProvider
 {
-    CurrencyTradeCoefficientResponse GetCoefficient(string? firstIso, string? secondIso);
-    IEnumerable<CurrencyTradeCoefficientResponse> GetCoefficientsLimit(int limit, int offset);
+    public Task<CurrencyTradeCoefficientResponse> GetCoefficient(string? firstIso, string? secondIso);
+    public  (IEnumerable<CurrencyTradeCoefficientResponse>, int) GetCoefficientsLimit(int limit, int offset);
 }

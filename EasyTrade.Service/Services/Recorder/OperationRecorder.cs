@@ -22,24 +22,24 @@ public class OperationRecorder : IOperationRecorder
     }
     public async Task Record(UpdateBalanceModel data)
     {
-        var ccy = _ccyRepository.Get(data.IsoCode);
+        var ccy = await _ccyRepository.Get(data.IsoCode);
         var operation = new Operation()
         {
             Currency = ccy,
             DateTime = data.DateTime,
             Amount = data.Amount
         };
-        await Record(new [] { operation });
+        Record(new [] { operation });
         await _db.SaveChangesAsync();
     }
 
-    public async Task Record(IEnumerable<Operation> operations)
+    public void Record(IEnumerable<Operation> operations)
     {
         var ccys = operations.Select(o => o.Currency).Distinct();
         foreach (var ccy in ccys)
         {
             var balance = _db.Balances.FirstOrDefault(b=>b.CurrencyIso == ccy.IsoCode);
-            await _locker.ConcurrentExecuteAsync(() => 
+            _locker.ConcurrentExecuteAsync(() => 
                     AddOneCcyOperations(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy, balance),
                     balance
                 );

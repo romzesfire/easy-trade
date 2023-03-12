@@ -20,7 +20,7 @@ public class BrokerCurrencyTradeCreatorModel
     {
         QuotesProvider = new Mock<IQuotesProvider>();
         QuotesProvider.Setup(q => q.Get(sellCurrency.IsoCode, buyCurrency.IsoCode))
-            .Returns(new Quote(
+            .ReturnsAsync(new Quote(
                 new QuoteResponse()
                 {
                     Query = new Query() { From = sellCurrency.IsoCode, To = buyCurrency.IsoCode },

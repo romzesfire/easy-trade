@@ -13,11 +13,11 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
         _db = db;
     }
 
-    public IEnumerable<ClientCurrencyTrade> GetAll()
+    public async Task<IEnumerable<ClientCurrencyTrade>> GetAll()
     {
-        return _db.ClientTrades.Include(t => t.BrokerCurrencyTrade)
+        return await _db.ClientTrades.Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
-            .Include(t => t.SellCcy).ToList();
+            .Include(t => t.SellCcy).ToListAsync();
     }
 
     public (IEnumerable<ClientCurrencyTrade>, int) GetLimited(int limit, int offset)
@@ -28,11 +28,11 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
             .Include(t => t.SellCcy).ToList(), _db.ClientTrades.Count());
     }
 
-    public ClientCurrencyTrade Get(int id)
+    public async Task<ClientCurrencyTrade> Get(int id)
     {
-        return _db.ClientTrades.Where(t => t.Id == id)
+        return await _db.ClientTrades.Where(t => t.Id == id)
             .Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
-            .Include(t => t.SellCcy).First();
+            .Include(t => t.SellCcy).FirstAsync();
     }
 }

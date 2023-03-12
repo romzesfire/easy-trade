@@ -13,13 +13,14 @@ public class CurrencyTradesDbProvider : ICurrencyTradesProvider
     }
 
 
-    public IEnumerable<CurrencyTradeResponse> GetTrades(int limit, int offset)
+    public (IEnumerable<CurrencyTradeResponse>, int) GetTrades(int limit, int offset)
     {
-        return _tradeProvider.GetLimited(limit, offset).Item1.Select(c=>(CurrencyTradeResponse)c);
+        var result = _tradeProvider.GetLimited(limit, offset);
+        return (result.Item1.Select(c=>(CurrencyTradeResponse)c), result.Item2);
     }
 
-    public CurrencyTradeResponse GetTrade(int id)
+    public async Task<CurrencyTradeResponse> GetTrade(int id)
     {
-        return (CurrencyTradeResponse)_tradeProvider.Get(id);
+        return (CurrencyTradeResponse) await _tradeProvider.Get(id);
     }
 }

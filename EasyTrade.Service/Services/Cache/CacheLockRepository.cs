@@ -3,17 +3,15 @@ namespace EasyTrade.Service.Services.Cache;
 public class CacheLockRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
 {
     private readonly Dictionary<TId, CacheEntityModel<TEnt>> _cache;
-    private readonly Func<TId, TEnt> _getter;
-    public CacheLockRepository(Func<TId, TEnt> getter)
+    public CacheLockRepository()
     {
         _cache = new Dictionary<TId, CacheEntityModel<TEnt>>();
-        _getter = getter;
     }
-    public TEnt Get(TId id)
+    public TEnt Get(TId id, Func<TId, TEnt> getter)
     {
         if (!_cache.ContainsKey(id))
         {
-            var entity = _getter.Invoke(id);
+            var entity = getter.Invoke(id);
             lock (entity)
             {
                 _cache.Add(id, new CacheEntityModel<TEnt>(entity));
@@ -28,7 +26,7 @@ public class CacheLockRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
             {
                 if (!entity.IsValid())
                 {
-                    entity.SetEntity(_getter.Invoke(id));
+                    entity.SetEntity(getter.Invoke(id));
                     return _cache[id].GetEntity();
                 }
 
@@ -36,5 +34,10 @@ public class CacheLockRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
             }
 
         }
+    }
+
+    public void Clear()
+    {
+        _cache.Clear();
     }
 }
