@@ -3,37 +3,42 @@ namespace EasyTrade.Service.Services.Cache;
 public class CacheLockRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
 {
     private readonly Dictionary<TId, CacheEntityModel<TEnt>> _cache;
+    private object _lockObject = new object();
+
     public CacheLockRepository()
     {
         _cache = new Dictionary<TId, CacheEntityModel<TEnt>>();
     }
+
     public TEnt Get(TId id, Func<TId, TEnt> getter)
     {
         if (!_cache.ContainsKey(id))
         {
-            var entity = getter.Invoke(id);
-            lock (entity)
+            var value = getter.Invoke(id);
+            lock (_lockObject)
             {
-                _cache.Add(id, new CacheEntityModel<TEnt>(entity));
+                if (!_cache.ContainsKey(id))
+                {
+                    _cache.Add(id, new CacheEntityModel<TEnt>(value));
+                    return value;
+                }
             }
-            
-            return entity;
         }
-        else
+
+        var entity = _cache[id];
+        if (!entity.IsValid())
         {
-            var entity = _cache[id];
-            lock (entity)
+            lock (_lockObject)
             {
                 if (!entity.IsValid())
                 {
                     entity.SetEntity(getter.Invoke(id));
                     return _cache[id].GetEntity();
                 }
-
-                return entity.GetEntity();
             }
-
         }
+
+        return entity.GetEntity();
     }
 
     public void Clear()
