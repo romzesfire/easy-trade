@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Effort" Version="2.2.16" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EasyTrade.Domain\EasyTrade.Domain.csproj" />
+      <ProjectReference Include="..\EasyTrade.Repositories\EasyTrade.Repositories.csproj" />
       <ProjectReference Include="..\EasyTrade.Service\EasyTrade.Service.csproj" />
     </ItemGroup>
 
