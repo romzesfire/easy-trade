@@ -11,13 +11,9 @@ namespace EasyTrade.Repositories.Repository;
 public class CurrencyRepository : IRepository<Currency, string>
 {
     private EasyTradeDbContext _db;
-    private ICacheRepository<Currency, string> _cache;
-    private IMemoryCache _memoryCache;
-    public CurrencyRepository(EasyTradeDbContext db, IMemoryCache memoryCache, ICacheServiceFactory cacheServiceFactory)
+    public CurrencyRepository(EasyTradeDbContext db)
     {
         _db = db;
-        _cache = cacheServiceFactory.GetCacheService<Currency, string>(CacheType.Lock);
-        _memoryCache = memoryCache;
     }
 
     public async Task<IEnumerable<Currency>> GetAll()
@@ -30,28 +26,12 @@ public class CurrencyRepository : IRepository<Currency, string>
         return (_db.Currencies.OrderByDescending(o=>o.Id).Skip(offset).Take(limit).ToList(), _db.Currencies.Count());
     }
 
-    private async Task<Currency> GetFromDb(string id)
+    public async Task<Currency> Get(string id)
     {
-        var ccy = _db.Currencies.FirstOrDefault(c=>c.IsoCode == id);
+        var ccy = await _db.Currencies.FirstOrDefaultAsync(c=>c.IsoCode == id);
         if (ccy == null)
             throw new CurrencyNotFoundException(id);
         
-        return ccy;
-    }
-    public async Task<Currency> Get(string id)
-    {
-        _memoryCache.TryGetValue(id, out Currency ccy);
-        //var ccy = await _cache.Get(id, GetFromDb);
-        if (ccy == null)
-        {
-            ccy = await GetFromDb(id);
-            if (ccy != null)
-            {
-                _memoryCache.Set(id, ccy,
-                    new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(30)));
-            }
-        }
         return ccy;
     }
 }
