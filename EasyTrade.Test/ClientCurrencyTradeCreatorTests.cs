@@ -100,7 +100,7 @@ public class ClientCurrencyTradeCreatorTests
             model.Locker.Object,
             _dbContext,
             _currencyRepository,
-            model.CoefficientRepository,
+            model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
@@ -118,7 +118,7 @@ public class ClientCurrencyTradeCreatorTests
             model.Locker.Object,
             _dbContext,
             _currencyRepository,
-            model.CoefficientRepository,
+            model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
@@ -146,7 +146,7 @@ public class ClientCurrencyTradeCreatorTests
             model.Locker.Object,
             _dbContext,
             _currencyRepository,
-            model.CoefficientRepository,
+            model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
