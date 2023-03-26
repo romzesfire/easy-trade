@@ -3,6 +3,7 @@ using EasyTrade.Domain.Abstractions;
 using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
+using EasyTrade.Service.Services.Cache;
 
 namespace EasyTrade.Service.Services.Recorder;
 
@@ -12,6 +13,7 @@ public class OperationRecorder : IOperationRecorder
     private readonly IRepository<Currency, string> _ccyRepository;
     private readonly ILocker _locker;
     private readonly IBalanceCalculator? _balanceCalculator;
+    
     public OperationRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
          ILocker locker, IDomainCalculationProvider calculationProvider)
     {

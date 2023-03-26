@@ -3,6 +3,7 @@ using System;
 using EasyTrade.DAL.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyTrade.DAL.Migrations
 {
     [DbContext(typeof(EasyTradeDbContext))]
-    partial class EasyTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230326184351_AddAccountId")]
+    partial class AddAccountId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

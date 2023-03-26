@@ -11,6 +11,8 @@ public class Balance
     [ConcurrencyCheck]
     public Guid Version { get; set; }
     
+    public Guid AccountId { get; set; }
+    
     [Column(TypeName = "char(3)")]
     public string CurrencyIso { get; set; }
     
