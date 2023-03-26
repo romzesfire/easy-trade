@@ -11,10 +11,10 @@ namespace EasyTrade.API.Controllers;
 public class AdministratorController : ControllerBase
 {
     
-    private readonly IDataRecorder<UpdateBalanceModel> _updateBalance;
+    private readonly IOperationRecorder _updateBalance;
     private readonly IDataRecorder<UpdateCurrencyTradeCoefficientModel> _updateCcyTradeCoefficient;
     private readonly ICurrencyTradeCoefficientsProvider _coefficientsProvider;
-    public AdministratorController(IDataRecorder<UpdateBalanceModel> updateBalance,
+    public AdministratorController(IOperationRecorder updateBalance,
         IDataRecorder<UpdateCurrencyTradeCoefficientModel> updateCcyTradeCoefficient,
         ICurrencyTradeCoefficientsProvider coefficientsProvider)
     {

@@ -11,6 +11,7 @@ using EasyTrade.Service.Configuration;
 using EasyTrade.Service.Extensions;
 using EasyTrade.Service.Services;
 using EasyTrade.Service.Services.Cache;
+using EasyTrade.Service.Services.Recorder;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyTrade.API;

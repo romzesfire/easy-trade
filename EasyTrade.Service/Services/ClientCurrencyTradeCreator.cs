@@ -42,11 +42,11 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
         
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-        await _locker.ConcurrentExecuteAsync(() =>
+        await _locker.ConcurrentExecuteAsync(async () =>
             {
                 AddBalances(clientTrade);
                 _db.AddTrade(clientTrade);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             },
             sellCcy
         );
