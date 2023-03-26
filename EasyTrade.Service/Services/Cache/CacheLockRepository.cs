@@ -41,6 +41,18 @@ public class CacheLockRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
         return entity.GetEntity();
     }
 
+    public void AddOrUpdate(TId id, TEnt ent)
+    {
+        if (_cache.ContainsKey(id))
+        {
+            _cache[id].SetEntity(ent);
+        }
+        else
+        {
+            _cache.Add(id, new CacheEntityModel<TEnt>(ent));
+        }
+    }
+
     public void Clear()
     {
         _cache.Clear();

@@ -12,18 +12,21 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
     private readonly IBrokerCurrencyTradeCreator _brokerTradeCreator;
     private readonly EasyTradeDbContext _db;
     private readonly IRepository<Currency, string> _currencyRepository;
-    private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
+    //private readonly IRepository<CurrencyTradeCoefficient, (string?, string?)> _coefficientRepository;
     private readonly ILocker _locker;
     private readonly IOperationRecorder _operationRecorder;
     private readonly IPriceMarkupCalculator? _priceMarkupCalculator;
+    private readonly ICurrencyTradeCoefficientsProvider _coefficientsProvider;
+    
     public ClientCurrencyTradeCreator(IBrokerCurrencyTradeCreator brokerTradeCreator, 
         ILocker locker, EasyTradeDbContext dbContext, IRepository<Currency, string> currencyRepository,
-        IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository,
+        //IRepository<CurrencyTradeCoefficient, (string?, string?)> coefficientRepository,
+        ICurrencyTradeCoefficientsProvider coefficientsProvider,
         IOperationRecorder operationRecorder, IDomainCalculationProvider calculationProvider)
     {
         _brokerTradeCreator = brokerTradeCreator;
         _priceMarkupCalculator = calculationProvider.Get<IPriceMarkupCalculator>();
-        _coefficientRepository = coefficientRepository;
+        _coefficientsProvider = coefficientsProvider;
         _db = dbContext;
         _currencyRepository = currencyRepository;
         _locker = locker;
@@ -35,18 +38,18 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var (buyCcy, sellCcy) = await GetCurrencies(tradeModel);
         var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var coefficientModel = await _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode));
+        var coefficientModel = await _coefficientsProvider.GetCoefficient(buyCcy.IsoCode, sellCcy.IsoCode);
         var c = coefficientModel.Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;
         sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
         
         var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
-        await _locker.ConcurrentExecuteAsync(async () =>
+        await _locker.ConcurrentExecuteAsync(() =>
             {
                 AddBalances(clientTrade);
                 _db.AddTrade(clientTrade);
-                await _db.SaveChangesAsync();
+                _db.SaveChangesAsync();
             },
             sellCcy
         );
@@ -57,7 +60,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         (var buyCcy, var sellCcy) = await GetCurrencies(tradeModel);
         var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
         
-        var coefficientModel = await _coefficientRepository.Get((buyCcy.IsoCode, sellCcy.IsoCode));
+        var coefficientModel = await _coefficientsProvider.GetCoefficient(buyCcy.IsoCode, sellCcy.IsoCode);
         var c = coefficientModel.Coefficient;
         var buyAmount = brokerTrade.BuyAmount;
         var sellAmount = brokerTrade.SellAmount;

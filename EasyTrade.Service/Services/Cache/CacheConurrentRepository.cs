@@ -19,6 +19,12 @@ public class CacheConcurrentRepository<TEnt, TId> : ICacheRepository<TEnt, TId>
         return entity.GetEntity();
     }
 
+    public void AddOrUpdate(TId id, TEnt ent)
+    {
+        _cache.AddOrUpdate(id, (id) => new CacheEntityModel<TEnt>(ent),
+            (id1, model) => new CacheEntityModel<TEnt>(ent));
+    }
+
     private CacheEntityModel<TEnt> Update(TId id, CacheEntityModel<TEnt> entity)
     {
         if (entity.IsValid())

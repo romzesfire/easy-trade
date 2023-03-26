@@ -7,6 +7,7 @@ using EasyTrade.DTO.Model;
 using EasyTrade.Repositories.Repository;
 using EasyTrade.Service.Model.ResponseModels;
 using EasyTrade.Service.Services;
+using EasyTrade.Service.Services.Cache;
 using EasyTrade.Service.Services.Recorder;
 using Moq;
 
@@ -18,7 +19,7 @@ public class ClientCurrencyTradeCreatorModel
     public IBrokerCurrencyTradeCreator BrokerTradeCreator { get; }
     public EasyTradeDbContext Db { get; }
     public IRepository<Currency, string> CurrencyRepository { get; }
-    public IRepository<CurrencyTradeCoefficient, (string?, string?)> CoefficientRepository { get; }
+    public ICurrencyTradeCoefficientsProvider CoefficientProvider { get; }
     public Mock<ILocker> Locker { get; }
     public IOperationRecorder OperationRecorder { get; }
     public IPriceMarkupCalculator? PriceMarkupCalculator { get; }
@@ -44,7 +45,8 @@ public class ClientCurrencyTradeCreatorModel
         Db = dbContext;
         BrokerTradeCreator = new BrokerCurrencyTradeCreator(QuotesProvider.Object,
             new DomainCalculatorProvider());
-        CoefficientRepository = new CurrencyTradeCoefficientRepository(dbContext);
+        var coefficientRepository = new CurrencyTradeCoefficientRepository(dbContext);
+        CoefficientProvider = new CurrencyTradeCoefficientsProvider(coefficientRepository, new CacheServiceFactory());
         CurrencyRepository = new CurrencyRepository(dbContext);
     }
 }

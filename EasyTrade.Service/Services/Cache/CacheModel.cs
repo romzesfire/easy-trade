@@ -21,10 +21,14 @@ public class CacheEntityModel<TEnt>
     }
 
     public TEnt GetEntity() => _entity;
-    public void SetEntity(TEnt entity) => _entity = entity;
+    public void SetEntity(TEnt entity)
+    {
+        _entity = entity;
+        _updated = DateTime.Now;
+    }
     public bool IsValid()
     {
-        var elapsedTime = _updated.Subtract(DateTime.Now);
+        var elapsedTime = DateTime.Now.Subtract(_updated);
         return elapsedTime < _options.ValidTime;
     }
 }

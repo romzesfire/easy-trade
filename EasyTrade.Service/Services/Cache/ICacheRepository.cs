@@ -8,4 +8,5 @@ public interface ICacheRepository
 public interface ICacheRepository<TEnt, TId> : ICacheRepository
 {
     public TEnt Get(TId id, Func<TId, TEnt> getter);
+    public void AddOrUpdate(TId id, TEnt ent);
 }
