@@ -12,7 +12,7 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
     private readonly IRepository<Currency, string> _ccyRepository;
     private readonly ILocker _locker;
     private readonly IRepository<CurrencyTradeCoefficient, (string, string)> _coefficients;
-    private readonly object _lockObject = new();
+    private static object _lockObject = new();
     private readonly ICacheRepository<CurrencyTradeCoefficient, (string?, string?)> _cache;
     public CurrencyTradeCoefficientRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository, 
         ILocker locker, IRepository<CurrencyTradeCoefficient, (string, string)> coefficients, 
@@ -33,8 +33,8 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
             await _locker.ConcurrentExecuteAsync(() =>
             {
                 coefficient.Coefficient = data.Coefficient;
-                _cache.AddOrUpdate((coefficient.FirstCcy.IsoCode, coefficient.SecondCcy.IsoCode), coefficient);
                 _db.SaveChanges();
+                _cache.AddOrUpdate((coefficient.FirstCcy.IsoCode, coefficient.SecondCcy.IsoCode), coefficient);
             }, _lockObject);
         }
         else
@@ -51,8 +51,8 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
             await _locker.ConcurrentExecuteAsync(() =>
             {
                 _db.Coefficients.Add(c);
-                _cache.AddOrUpdate((coefficient.FirstCcy.IsoCode, coefficient.SecondCcy.IsoCode), coefficient);
                 _db.SaveChanges();
+                _cache.AddOrUpdate((coefficient.FirstCcy.IsoCode, coefficient.SecondCcy.IsoCode), coefficient);
             }, _lockObject);
         }
     }
