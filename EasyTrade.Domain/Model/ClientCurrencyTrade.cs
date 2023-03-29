@@ -5,6 +5,8 @@ namespace EasyTrade.Domain.Model;
 public class ClientCurrencyTrade : CurrencyTrade
 {
     public uint BrokerCurrencyTradeId { get; set; }
+    
+    public Guid AccountId { get; set; }
     public BrokerCurrencyTrade BrokerCurrencyTrade { get; set; }
 
     public ClientCurrencyTrade()

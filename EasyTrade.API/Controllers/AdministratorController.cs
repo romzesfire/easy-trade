@@ -2,10 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("[controller]")]
 public class AdministratorController : ControllerBase
@@ -48,6 +50,6 @@ public class AdministratorController : ControllerBase
     public IActionResult GetCoeficients([FromQuery]PagingRequestModel model)
     {
         var c = _coefficientsProvider.GetCoefficientsLimit(model.Limit, model.Offset);
-        return Ok(c);
+        return Ok(c.Item1);
     }
 }

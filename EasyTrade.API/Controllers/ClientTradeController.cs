@@ -1,12 +1,14 @@
 
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class ClientTradeController : ControllerBase
 {
     private readonly ILogger<ClientTradeController> _logger;

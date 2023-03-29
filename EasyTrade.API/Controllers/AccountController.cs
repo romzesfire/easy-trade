@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyTrade.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class AccountController : ControllerBase
@@ -22,6 +24,7 @@ public class AccountController : ControllerBase
     public IActionResult GetOperations([FromQuery]PagingRequestModel model)
     {
         var balances = _operationProvider.GetOperations(model.Limit, model.Offset);
+        var x = User.Claims;
         return Ok(balances.Item1);
     }
     
