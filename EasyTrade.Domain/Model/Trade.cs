@@ -9,8 +9,6 @@ public abstract class Trade //Datetime + timezone
     private decimal sellAmount;
     public uint Id { get; set; }
     public DateTimeOffset DateTime { get; set; }
-
-    public Guid AccountId { get; set; }
     public decimal BuyAmount
     { 
         get => buyAmount; 

@@ -39,7 +39,15 @@ public class ValidationOptionsProvider : IValidationOptionsProvider
                 {
                     StatusCode = (int)HttpStatusCode.Conflict
                 }
-            }
+            },
+            {
+                typeof(InvalidSecurityKeyException), 
+                new ValidationOptions()
+                {
+                    StatusCode = (int)HttpStatusCode.BadRequest
+                }
+            },
+            
         };
     }
 
