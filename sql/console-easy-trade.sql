@@ -85,7 +85,7 @@ INSERT INTO "Balances" ("CurrencyIso", "Amount", "Version") VALUES ('CAD', 10000
 INSERT INTO "Balances" ("CurrencyIso", "Amount", "Version") VALUES ('CHF', 10000000, 'd812e553-f6c8-4289-9d61-1cb52dbdb04b');
 INSERT INTO "Balances" ("CurrencyIso", "Amount", "Version") VALUES ('CNH', 10000000, 'd8a2e553-fec8-4689-9d61-1cb821bdb04b');
 
-
+UPDATE "Operations" SET ""
 INSERT INTO "Operations" ("CurrencyIso", "Amount", "DateTime") VALUES ('RUB', 10000000, now());
 INSERT INTO "Operations" ("CurrencyIso", "Amount", "DateTime") VALUES ('USD', 10000000, now());
 INSERT INTO "Operations" ("CurrencyIso", "Amount", "DateTime") VALUES ('GBP', 10000000, now());
