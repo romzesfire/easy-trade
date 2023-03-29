@@ -1,8 +1,10 @@
 using System.Text.Json.Serialization;
+using EasyTrade.API.Configuration;
 using EasyTrade.API.Extension;
 using EasyTrade.API.Validation;
 using EasyTrade.DAL.Configuration;
 using EasyTrade.DAL.DatabaseContext;
+using EasyTrade.Domain.Abstractions;
 using EasyTrade.Domain.Extensions;
 using EasyTrade.Repositories.Extensions;
 using EasyTrade.DTO.Abstractions;
@@ -12,7 +14,10 @@ using EasyTrade.Service.Extensions;
 using EasyTrade.Service.Services;
 using EasyTrade.Service.Services.Cache;
 using EasyTrade.Service.Services.Recorder;
+using EasyTrade.Service.Services.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace EasyTrade.API;
 
@@ -37,7 +42,28 @@ public class Startup
         _builder.Services.AddControllers().AddJsonOptions(options =>
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         _builder.Services.AddEndpointsApiExplorer();
-        _builder.Services.AddSwaggerGen();
+        _builder.Services.AddSwaggerGen(c =>
+        {
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                In = ParameterLocation.Header, 
+                Description = "Please insert JWT with Bearer into field",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey 
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                { 
+                    new OpenApiSecurityScheme 
+                    { 
+                        Reference = new OpenApiReference 
+                        { 
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer" 
+                        } 
+                    },
+                    new string[] { } 
+                } 
+            });
+        });
         string connectionString = _configuration.GetConnectionString("Database");
         var optionsBuilder = new DbContextOptionsBuilder<EasyTradeDbContext>();
         var lockerCfg = _configuration.GetSection("Locker").Get<LockerConfiguration>();
@@ -53,6 +79,20 @@ public class Startup
             _builder.Services.AddSingleton<ILocker, PessimisticLocker>();
         }
 
+        _builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = AuthOptions.ISSUER,
+                ValidateAudience = true,
+                ValidAudience = AuthOptions.AUDIENCE,
+                ValidateLifetime = true,
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                ValidateIssuerSigningKey = true,
+                
+            };
+        });
         _builder.Services.AddQuotesProvider(_configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())
             .AddValidationOptions()
             .AddDomainServices()
@@ -65,6 +105,7 @@ public class Startup
             .AddScoped<ICurrencyTradesProvider, CurrencyTradesDbProvider>()
             .AddScoped<ICurrenciesProvider, CurrenciesProvider>()
             .AddScoped<IBalanceProvider, BalanceDbProvider>()
+            .AddSingleton<ISecurityKeyValidator, SecurityKeyValidator>()
             .AddDbServices(_configuration.GetSection("Database").Get<DbConfigutation>().ConnectionString)
             .AddScoped<IBrokerCurrencyTradeCreator, BrokerCurrencyTradeCreator>()
             .AddScoped<IClientCurrencyTradeCreator, ClientCurrencyTradeCreator>()
@@ -86,7 +127,8 @@ public class Startup
 
         _app.UseMiddleware<RequestDurationMiddleware>();
         _app.UseHttpsRedirection();
-
+        _app.UseRouting();
+        _app.UseAuthentication();
         _app.UseAuthorization();
 
         _app.MapControllers();
