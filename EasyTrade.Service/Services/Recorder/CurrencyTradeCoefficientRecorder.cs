@@ -26,7 +26,7 @@ public class CurrencyTradeCoefficientRecorder : IDataRecorder<UpdateCurrencyTrad
         _cache = cacheServiceFactory.GetCacheService<CurrencyTradeCoefficient, (string?, string?)>(CacheType.Lock);
     }
 
-    public async Task Record(UpdateCurrencyTradeCoefficientModel data, Guid username = default)
+    public async Task Record(UpdateCurrencyTradeCoefficientModel data, Guid userId = default)
     {
         await using (var txn = await _db.Database.BeginTransactionAsync())
         {

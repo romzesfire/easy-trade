@@ -19,12 +19,12 @@ public class LoginController : Controller
     }
     
     [HttpGet("Login")]
-    public IActionResult Login(string username, string securityKey)
+    public IActionResult Login(string userId, string securityKey)
     {
         var role = _securityKeyValidator.CheckRole(securityKey);
         var claims = new List<Claim>
         {
-            new (ClaimTypes.Name, username),
+            new (ClaimTypes.Name, userId),
             new (ClaimTypes.Role, role)
         };
         var jwt = new JwtSecurityToken(
