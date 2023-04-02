@@ -26,9 +26,9 @@ public class AdministratorController : ControllerBase
     }
     
     [HttpPost("ReplenishBalance")]
-    public async Task<IActionResult> ReplenishBalance(UpdateBalanceModel balanceModel)
+    public async Task<IActionResult> ReplenishBalance(UpdateAdminBalanceModel balanceModel)
     {
-        await _updateBalance.Record(balanceModel);
+        await _updateBalance.Record(balanceModel, balanceModel.UserId);
         return Ok();
     }
 

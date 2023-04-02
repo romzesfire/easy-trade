@@ -99,6 +99,7 @@ public class Startup
             .AddRepositories()
             .AddMemoryCache()
             .AddLocalCurrenciesProvider()
+            .AddSingleton<IClaimsExecutor, ClaimsExecutor>()
             .AddSingleton<ICacheServiceFactory, CacheServiceFactory>()
             .AddScoped<IOperationProvider, OperationDbProvider>()
             .Configure<LockerConfiguration>(_configuration.GetSection("Locker"))

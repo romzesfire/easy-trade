@@ -326,7 +326,7 @@ public class BalanceCalculatorTests
     {
         var calculator = new BalanceCalculator();
         var result = calculator.Calculate(calculatorModelValid.BalanceInput,
-            calculatorModelValid.Operations, calculatorModelValid.Currency);
+            calculatorModelValid.Operations, calculatorModelValid.Currency, new Guid());
         
         Assert.That(calculatorModelValid.BalanceResult.Amount == result.Amount 
                     && calculatorModelValid.BalanceResult.Id == result.Id, "Invalid balance calculation");
@@ -342,7 +342,7 @@ public class BalanceCalculatorTests
         Assert.Throws<NotEnoughAssetsException>( ()=>
         {
             calculator.Calculate(calculatorModelValid.BalanceInput,
-                calculatorModelValid.Operations, calculatorModelValid.Currency);
+                calculatorModelValid.Operations, calculatorModelValid.Currency, new Guid());
         }, "Invalid operation is not detected");
     }
 }

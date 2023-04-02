@@ -20,17 +20,17 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
             .Include(t => t.SellCcy).ToListAsync();
     }
 
-    public (IEnumerable<ClientCurrencyTrade>, int) GetLimited(int limit, int offset)
+    public (IEnumerable<ClientCurrencyTrade>, int) GetLimited(int limit, int offset, Guid userId)
     {
         return (_db.ClientTrades.OrderByDescending(t=>t.DateTime)
-            .Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
+            .Skip(offset).Take(limit).Where(t=>t.AccountId == userId).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList(), _db.ClientTrades.Count());
     }
 
-    public async Task<ClientCurrencyTrade> Get(int id)
+    public async Task<ClientCurrencyTrade> Get(int id, Guid userId)
     {
-        return await _db.ClientTrades.Where(t => t.Id == id)
+        return await _db.ClientTrades.Where(t => t.Id == id && t.AccountId == userId)
             .Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).FirstAsync();

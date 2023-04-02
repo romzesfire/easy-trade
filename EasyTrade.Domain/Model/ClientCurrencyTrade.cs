@@ -13,7 +13,7 @@ public class ClientCurrencyTrade : CurrencyTrade
     {
         
     }
-    public ClientCurrencyTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
+    public ClientCurrencyTrade(BrokerCurrencyTrade brokerTrade, Guid userId, decimal buyAmount, decimal sellAmount)
     {
         TradeType = brokerTrade.TradeType;
         BuyCcy = brokerTrade.BuyCcy;
@@ -22,5 +22,6 @@ public class ClientCurrencyTrade : CurrencyTrade
         SellAmount = sellAmount;
         BrokerCurrencyTrade = brokerTrade;
         DateTime = brokerTrade.DateTime;
+        AccountId = userId;
     }
 }

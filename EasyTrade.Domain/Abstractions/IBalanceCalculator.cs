@@ -4,5 +4,5 @@ namespace EasyTrade.Domain.Abstractions;
 
 public interface IBalanceCalculator : ICalculator
 {
-    public Balance Calculate(Balance balance, IEnumerable<Operation> operations, Currency ccy);
+    public Balance Calculate(Balance balance, IEnumerable<Operation> operations, Currency ccy, Guid userId);
 }

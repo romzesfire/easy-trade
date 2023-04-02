@@ -21,12 +21,12 @@ public class CurrencyRepository : IRepository<Currency, string>
         return await _db.Currencies.ToListAsync();
     }
 
-    public (IEnumerable<Currency>, int) GetLimited(int limit, int offset)
+    public (IEnumerable<Currency>, int) GetLimited(int limit, int offset, Guid userId = default)
     {
         return (_db.Currencies.OrderByDescending(o=>o.Id).Skip(offset).Take(limit).ToList(), _db.Currencies.Count());
     }
 
-    public async Task<Currency> Get(string id)
+    public async Task<Currency> Get(string id, Guid userId = default)
     {
         var ccy = await _db.Currencies.FirstOrDefaultAsync(c=>c.IsoCode == id);
         if (ccy == null)

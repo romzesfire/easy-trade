@@ -21,7 +21,7 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
             .ToListAsync();
     }
 
-    public (IEnumerable<CurrencyTradeCoefficient>, int) GetLimited(int limit, int offset)
+    public (IEnumerable<CurrencyTradeCoefficient>, int) GetLimited(int limit, int offset, Guid userId = default)
     {
         return (_db.Coefficients.OrderByDescending(t=>t.DateTime).Skip(offset).Take(limit)
             .Include(c=>c.FirstCcy)
@@ -29,7 +29,7 @@ public class CurrencyTradeCoefficientRepository : IRepository<CurrencyTradeCoeff
             .ToList(), _db.Coefficients.Count());
     }
 
-    public async Task<CurrencyTradeCoefficient> Get((string?, string?) id)
+    public async Task<CurrencyTradeCoefficient> Get((string?, string?) id, Guid userId = default)
     {
         var coefficient = await _db.Coefficients.Include(cf => cf.FirstCcy)
             .Include(cf => cf.SecondCcy)

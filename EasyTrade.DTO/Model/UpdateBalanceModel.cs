@@ -16,3 +16,9 @@ public class UpdateBalanceModel
     [Required]
     public DateTimeOffset DateTime { get; set; }
 }
+
+public class UpdateAdminBalanceModel : UpdateBalanceModel
+{
+    [Required]
+    public Guid UserId { get; set; }
+}

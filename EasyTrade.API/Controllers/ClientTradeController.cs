@@ -14,41 +14,46 @@ public class ClientTradeController : ControllerBase
     private readonly ILogger<ClientTradeController> _logger;
     private readonly IClientCurrencyTradeCreator _tradeCreator;
     private readonly ICurrencyTradesProvider _currencyTradesProvider;
+    private readonly IClaimsExecutor _claimsExecutor;
     public ClientTradeController(ILogger<ClientTradeController> logger,
-        IClientCurrencyTradeCreator tradeCreator, ICurrencyTradesProvider currencyTradesProvider)
+        IClientCurrencyTradeCreator tradeCreator, ICurrencyTradesProvider currencyTradesProvider, 
+        IClaimsExecutor claimsExecutor)
     {
         _logger = logger;
         _tradeCreator = tradeCreator;
         _currencyTradesProvider = currencyTradesProvider;
+        _claimsExecutor = claimsExecutor;
     }
 
     [HttpPost("Buy")]
     public async Task<IActionResult> Buy(BuyTradeCreationModel buyModel)
     {
-        //FluentValidator
-        //CQRS
-        await _tradeCreator.Create(buyModel);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        await _tradeCreator.Create(buyModel, user);
         return Ok();
     }
     
     [HttpPost("Sell")]
     public async Task<IActionResult> Sell(SellTradeCreationModel sellModel)
     {
-        await _tradeCreator.Create(sellModel);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        await _tradeCreator.Create(sellModel, user);
         return Ok();
     }
     
     [HttpGet("Trades")]
     public IActionResult GetTrades([FromQuery]PagingRequestModel model)
     {
-        var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset, user);
         return Ok(trades);
     }
     
     [HttpGet("Trades/{id}")]
     public IActionResult GetTrade(int id)
     {
-        var trade = _currencyTradesProvider.GetTrade(id);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        var trade = _currencyTradesProvider.GetTrade(id, user);
         return Ok(trade);
     }
     

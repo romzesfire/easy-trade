@@ -47,7 +47,13 @@ public class ValidationOptionsProvider : IValidationOptionsProvider
                     StatusCode = (int)HttpStatusCode.BadRequest
                 }
             },
-            
+            {
+            typeof(InvalidUserException),
+            new ValidationOptions()
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                }
+            }
         };
     }
 

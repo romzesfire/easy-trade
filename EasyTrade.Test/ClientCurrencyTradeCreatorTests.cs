@@ -104,7 +104,7 @@ public class ClientCurrencyTradeCreatorTests
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
-        await creator.Create(model.BuyTradeCreationModel);
+        await creator.Create(model.BuyTradeCreationModel, Guid.NewGuid());
         var countAfter = _dbContext.Operations.Count();
         Assert.That(countAfter - 2 == countBefore, "Invalid operations count added by creating trade");
     }
@@ -122,7 +122,7 @@ public class ClientCurrencyTradeCreatorTests
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
-        await creator.Create(model.BuyTradeCreationModel);
+        await creator.Create(model.BuyTradeCreationModel, Guid.NewGuid());
 
         var lastOperatons = _dbContext.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
         var buyOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.BuyTradeCreationModel
@@ -150,7 +150,7 @@ public class ClientCurrencyTradeCreatorTests
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
-        await creator.Create(model.SellTradeCreationModel);
+        await creator.Create(model.SellTradeCreationModel, Guid.NewGuid());
 
         var lastOperatons = _dbContext.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
         var buyOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.SellTradeCreationModel

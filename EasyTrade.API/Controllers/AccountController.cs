@@ -13,17 +13,20 @@ public class AccountController : ControllerBase
 {
     private readonly IOperationProvider _operationProvider;
     private readonly IBalanceProvider _balanceProvider;
-
-    public AccountController(IOperationProvider operationProvider, IBalanceProvider balanceProvider)
+    private IClaimsExecutor _claimsExecutor;
+    public AccountController(IOperationProvider operationProvider, IBalanceProvider balanceProvider, 
+        IClaimsExecutor claimsExecutor)
     {
         _operationProvider = operationProvider;
         _balanceProvider = balanceProvider;
+        _claimsExecutor = claimsExecutor;
     }
     
     [HttpGet("Operations")]
     public IActionResult GetOperations([FromQuery]PagingRequestModel model)
     {
-        var balances = _operationProvider.GetOperations(model.Limit, model.Offset);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        var balances = _operationProvider.GetOperations(model.Limit, model.Offset, user);
         var x = User.Claims;
         return Ok(balances.Item1);
     }
@@ -38,7 +41,8 @@ public class AccountController : ControllerBase
     [HttpGet("Balances/{isoCode}")]
     public IActionResult GetBalanceByCode([MaxLength(3)]string isoCode)
     {
-        var balance = _balanceProvider.GetBalance(isoCode);
+        var user = _claimsExecutor.GetUserId(User.Claims);
+        var balance = _balanceProvider.GetBalance(isoCode, user);
         return Ok(balance);
     }
     

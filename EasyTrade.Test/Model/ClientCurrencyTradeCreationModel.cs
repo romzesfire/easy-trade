@@ -38,11 +38,12 @@ public class ClientCurrencyTradeCreatorModel
         Locker = new Mock<ILocker>();
         Locker.Setup(l => l.ConcurrentExecuteAsync(It.IsAny<Action>(), It.IsAny<object>()))
             .Callback<Action, object>((action, o) => action());
-        OperationRecorder = new OperationRecorder(dbContext, CurrencyRepository, Locker.Object,
-            new DomainCalculatorProvider());
+        
 
         PriceMarkupCalculator = new PriceMarkupCalculator();
         Db = dbContext;
+        OperationRecorder = new OperationRecorder(dbContext, CurrencyRepository, Locker.Object,
+            new DomainCalculatorProvider(), new BalanceRepository(Db));
         BrokerTradeCreator = new BrokerCurrencyTradeCreator(QuotesProvider.Object,
             new DomainCalculatorProvider());
         var coefficientRepository = new CurrencyTradeCoefficientRepository(dbContext);

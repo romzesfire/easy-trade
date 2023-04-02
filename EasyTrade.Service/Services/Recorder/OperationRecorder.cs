@@ -13,47 +13,50 @@ public class OperationRecorder : IOperationRecorder
     private readonly IRepository<Currency, string> _ccyRepository;
     private readonly ILocker _locker;
     private readonly IBalanceCalculator? _balanceCalculator;
-    
+    private IRepository<Balance, string> _balanceRepository;
     public OperationRecorder(EasyTradeDbContext db, IRepository<Currency, string> ccyRepository,
-         ILocker locker, IDomainCalculationProvider calculationProvider)
+         ILocker locker, IDomainCalculationProvider calculationProvider, IRepository<Balance, string> balanceRepository)
     {
         _db = db;
         _balanceCalculator = calculationProvider.Get<IBalanceCalculator>();
         _locker = locker;
         _ccyRepository = ccyRepository;
+        _balanceRepository = balanceRepository;
     }
-    public async Task Record(UpdateBalanceModel data)
+    public async Task Record(UpdateBalanceModel data, Guid userId)
     {
         var ccy = await _ccyRepository.Get(data.IsoCode);
         var operation = new Operation()
         {
             Currency = ccy,
             DateTime = data.DateTime,
-            Amount = data.Amount
+            Amount = data.Amount,
+            AccountId = userId
         };
-        Record(new [] { operation });
+        Record(new [] { operation }, userId);
         await _db.SaveChangesAsync();
     }
 
-    public void Record(IEnumerable<Operation> operations)
+    public async Task Record(IEnumerable<Operation> operations, Guid userId)
     {
         var ccys = operations.Select(o => o.Currency).Distinct();
         foreach (var ccy in ccys)
         {
-            var balance = _db.Balances.FirstOrDefault(b=>b.CurrencyIso == ccy.IsoCode);
+            var balance =  _balanceRepository.Get(ccy.IsoCode, userId).Result;
             _locker.ConcurrentExecuteAsync(() => 
-                    AddOneCcyOperations(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy, balance),
-                    balance
-                );
+                    AddOneCcyOperations(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy, 
+                        balance, userId), balance);
         }
     }
     
-    private void AddOneCcyOperations(IEnumerable<Operation> operations, Currency ccy, Balance balance)
+    private void AddOneCcyOperations(IEnumerable<Operation> operations, Currency ccy, Balance balance, Guid userId)
     {
-        balance = _balanceCalculator.Calculate(balance, operations, ccy);
+        balance = _balanceCalculator.Calculate(balance, operations, ccy, userId);
         _db.Operations.AddRange(operations);
 
         if (balance.Id == -1)
             _db.Balances.AddRange(balance);
     }
+
+
 }

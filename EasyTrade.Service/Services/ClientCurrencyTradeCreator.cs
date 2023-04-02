@@ -33,7 +33,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         _operationRecorder = operationRecorder;
     }
 
-    public async Task Create(BuyTradeCreationModel tradeModel)
+    public async Task Create(BuyTradeCreationModel tradeModel, Guid userId)
     {
         var (buyCcy, sellCcy) = await GetCurrencies(tradeModel);
         var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
@@ -44,10 +44,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var sellAmount = brokerTrade.SellAmount;
         sellAmount = _priceMarkupCalculator.CalculateSellAmount(sellAmount, c);
         
-        var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+        var clientTrade = CreateClientTrade(brokerTrade, userId, buyAmount, sellAmount);
         await _locker.ConcurrentExecuteAsync(() =>
             {
-                AddBalances(clientTrade);
+                AddBalances(clientTrade, userId);
                 _db.AddTrade(clientTrade);
                 _db.SaveChangesAsync();
             },
@@ -55,7 +55,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         );
     }
     
-    public async Task Create(SellTradeCreationModel tradeModel)
+    public async Task Create(SellTradeCreationModel tradeModel, Guid userId)
     {
         (var buyCcy, var sellCcy) = await GetCurrencies(tradeModel);
         var brokerTrade = await _brokerTradeCreator.Create(tradeModel, buyCcy, sellCcy);
@@ -66,10 +66,10 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         var sellAmount = brokerTrade.SellAmount;
         buyAmount /= c;
 
-        var clientTrade = CreateClientTrade(brokerTrade, buyAmount, sellAmount);
+        var clientTrade = CreateClientTrade(brokerTrade, userId, buyAmount, sellAmount);
         await _locker.ConcurrentExecuteAsync(() =>
              {
-                 AddBalances(clientTrade);
+                 AddBalances(clientTrade, userId);
                  _db.AddTrade(clientTrade);
                  _db.SaveChanges();
              },
@@ -85,26 +85,28 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
         return (buyCcy, sellCcy);
     }
 
-    private void AddBalances(ClientCurrencyTrade tradeModel)
+    private void AddBalances(ClientCurrencyTrade tradeModel, Guid userId)
     {
         var sellOperation = new Operation()
         {
             Currency = tradeModel.SellCcy,
             Amount = (-1) * tradeModel.SellAmount,
-            DateTime = tradeModel.DateTime
+            DateTime = tradeModel.DateTime,
+            AccountId = userId
         };
         var buyOperation = new Operation()
         {
             Currency = tradeModel.BuyCcy,
             Amount = tradeModel.BuyAmount,
-            DateTime = tradeModel.DateTime
+            DateTime = tradeModel.DateTime,
+            AccountId = userId
         };
-        _operationRecorder.Record(new [] { buyOperation, sellOperation });
+        _operationRecorder.Record(new [] { buyOperation, sellOperation }, userId);
     }
     
-    private ClientCurrencyTrade CreateClientTrade(BrokerCurrencyTrade brokerTrade, decimal buyAmount, decimal sellAmount)
+    private ClientCurrencyTrade CreateClientTrade(BrokerCurrencyTrade brokerTrade, Guid userId, decimal buyAmount, decimal sellAmount)
     {
-        return new ClientCurrencyTrade(brokerTrade, buyAmount, sellAmount);
+        return new ClientCurrencyTrade(brokerTrade, userId, buyAmount, sellAmount);
     }
 
 }

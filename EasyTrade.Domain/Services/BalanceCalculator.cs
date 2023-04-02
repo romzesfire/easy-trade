@@ -10,12 +10,19 @@ public class BalanceCalculator : IBalanceCalculator
     {
         
     }
-    public Balance Calculate(Balance? balance, IEnumerable<Operation> operations, Currency ccy)
+    public Balance Calculate(Balance? balance, IEnumerable<Operation> operations, Currency ccy, Guid userId)
     {
         var sum = operations.Sum(o => o.Amount);
         if (balance == null)
         {
-            balance = new Balance() { Id = -1, Amount = 0, Currency = ccy, CurrencyIso = ccy.IsoCode };
+            balance = new Balance()
+            {
+                Id = -1, 
+                Amount = 0, 
+                Currency = ccy, 
+                CurrencyIso = ccy.IsoCode,
+                AccountId = userId
+            };
         }
 
         sum += balance.Amount;

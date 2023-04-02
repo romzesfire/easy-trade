@@ -11,14 +11,14 @@ public class OperationDbProvider : IOperationProvider
     {
         _balanceRepository = balanceRepository;
     }
-    public async Task<OperationResponse> GetOperation(int id)
+    public async Task<OperationResponse> GetOperation(int id, Guid userId)
     {
-        return (OperationResponse) await _balanceRepository.Get(id);
+        return (OperationResponse) await _balanceRepository.Get(id, userId);
     }
 
-    public (IEnumerable<OperationResponse>, int) GetOperations(int limit, int offset)
+    public (IEnumerable<OperationResponse>, int) GetOperations(int limit, int offset, Guid userId)
     {
-        var (operations, count) = _balanceRepository.GetLimited(limit, offset);
+        var (operations, count) = _balanceRepository.GetLimited(limit, offset, userId);
         return (operations.Select(o => (OperationResponse)o), count);
     }
 }

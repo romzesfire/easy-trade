@@ -23,4 +23,9 @@ public class Balance
         get => amount; 
         set => amount = decimal.Round(value, 9, MidpointRounding.ToEven); 
     }
+
+    public Balance()
+    {
+        
+    }
 }
