@@ -12,10 +12,13 @@ public class ClaimsExecutor : IClaimsExecutor
             .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
         if (userId == null)
             throw new InvalidUserException();
-            
-        
-        return Guid.Parse(userId.Value);
+
+        var result = Guid.TryParse(userId.Value, out var id);
+        if(!result)
+            throw new InvalidUserException();
+        return id;
     }
+    
     public string GetRole(IEnumerable<Claim> claims)
     {
         var role = claims
