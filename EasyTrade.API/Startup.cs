@@ -15,6 +15,7 @@ using EasyTrade.Service.Services;
 using EasyTrade.Service.Services.Cache;
 using EasyTrade.Service.Services.Recorder;
 using EasyTrade.Service.Services.Security;
+using EasyTradeLibs.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -89,8 +90,7 @@ public class Startup
                 ValidAudience = AuthOptions.AUDIENCE,
                 ValidateLifetime = true,
                 IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                ValidateIssuerSigningKey = true,
-                
+                ValidateIssuerSigningKey = true
             };
         });
         _builder.Services.AddQuotesProvider(_configuration.GetSection("ApiLayer").Get<QuotesApiConfiguration>())

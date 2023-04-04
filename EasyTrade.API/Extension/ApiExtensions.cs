@@ -1,4 +1,5 @@
 using EasyTrade.API.Validation;
+using EasyTradeLibs.Abstractions;
 
 namespace EasyTrade.API.Extension;
 

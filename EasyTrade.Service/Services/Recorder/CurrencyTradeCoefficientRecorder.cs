@@ -1,9 +1,9 @@
+using System.Transactions;
 using EasyTrade.DAL.DatabaseContext;
 using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
 using EasyTrade.DTO.Model;
 using EasyTrade.Service.Services.Cache;
-using System.Transactions;
 
 namespace EasyTrade.Service.Services.Recorder;
 
