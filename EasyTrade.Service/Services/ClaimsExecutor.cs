@@ -9,7 +9,7 @@ public class ClaimsExecutor : IClaimsExecutor
     public Guid GetUserId(IEnumerable<Claim> claims)
     {
         var userId = claims
-            .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
+            .FirstOrDefault(c => c.Type == ClaimTypes.Name);
         if (userId == null)
             throw new InvalidUserException();
 
@@ -21,8 +21,9 @@ public class ClaimsExecutor : IClaimsExecutor
     
     public string GetRole(IEnumerable<Claim> claims)
     {
+        
         var role = claims
-            .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role");
+            .FirstOrDefault(c => c.Type == ClaimTypes.Role);
         
         if (role == null)
             throw new InvalidUserException();

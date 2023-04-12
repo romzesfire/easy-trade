@@ -29,7 +29,7 @@ public class BalanceRepository : IRepository<Balance, string>
     public async Task<Balance> Get(string id, Guid userId)
     {
         var balance = await _db.Balances.Include(b => b.Currency)
-            .FirstOrDefaultAsync(b => b.Currency.IsoCode == id);
+            .FirstOrDefaultAsync(b => b.Currency.IsoCode == id && b.AccountId == userId);
 
         return balance;
     }
