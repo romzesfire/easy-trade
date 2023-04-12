@@ -42,7 +42,7 @@ public class OperationRecorder : IOperationRecorder
         var ccys = operations.Select(o => o.Currency).Distinct();
         foreach (var ccy in ccys)
         {
-            var balance =  _balanceRepository.Get(ccy.IsoCode, userId).Result;
+            var balance = _balanceRepository.Get(ccy.IsoCode, userId).Result;
             _locker.ConcurrentExecuteAsync(() => 
                     AddOneCcyOperations(operations.Where(o=>o.Currency.IsoCode == ccy.IsoCode), ccy, 
                         balance, userId), balance);

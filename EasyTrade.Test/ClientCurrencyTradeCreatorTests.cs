@@ -16,23 +16,12 @@ namespace EasyTrade.Test;
 [TestFixture]
 public class ClientCurrencyTradeCreatorTests
 {
-    private static EasyTradeDbContext _dbContext = CreateDbContext();
-    private static IRepository<Currency, string> _currencyRepository = new CurrencyRepository(_dbContext);
 
-    private static EasyTradeDbContext CreateDbContext()
-    {
-        var options = new DbContextOptionsBuilder<EasyTradeDbContext>()
-            .UseInMemoryDatabase("EasyTradeDb").Options;
-        var dbContext = new EasyTradeDbContext(options);
-        dbContext.GenerateInMemoryData();
-        return dbContext;
-    }
     private static IEnumerable BuyCases
     {
         get
         {
             yield return new ClientCurrencyBuyTradeCreatorModel(
-                _dbContext,
                 new BuyTradeCreationModel()
                 {
                     BuyCount = 100,
@@ -44,7 +33,6 @@ public class ClientCurrencyTradeCreatorTests
                 2M);
             
             yield return new ClientCurrencyBuyTradeCreatorModel(
-                _dbContext,
                 new BuyTradeCreationModel()
                 {
                     BuyCount = 100,
@@ -63,7 +51,6 @@ public class ClientCurrencyTradeCreatorTests
         get
         {
             yield return new ClientCurrencySellTradeCreatorModel(
-                _dbContext,
                 new SellTradeCreationModel()
                 {
                     SellCount = 100,
@@ -75,7 +62,6 @@ public class ClientCurrencyTradeCreatorTests
                 5000M);
             
             yield return new ClientCurrencySellTradeCreatorModel(
-                _dbContext,
                 new SellTradeCreationModel()
                 {
                     SellCount = 100,
@@ -94,18 +80,18 @@ public class ClientCurrencyTradeCreatorTests
     [TestCaseSource(nameof(BuyCases))]
     public async Task TestCountOperationsAddingInClientCurrencyTradeCreator(ClientCurrencyBuyTradeCreatorModel model)
     {
-        var countBefore = _dbContext.Operations.Count();
+        var countBefore = model.Db.Operations.Count();
         var creator = new ClientCurrencyTradeCreator(
             model.BrokerTradeCreator, 
             model.Locker.Object,
-            _dbContext,
-            _currencyRepository,
+            model.Db,
+            model.CurrencyRepository,
             model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
         await creator.Create(model.BuyTradeCreationModel, Guid.NewGuid());
-        var countAfter = _dbContext.Operations.Count();
+        var countAfter = model.Db.Operations.Count();
         Assert.That(countAfter - 2 == countBefore, "Invalid operations count added by creating trade");
     }
     
@@ -116,15 +102,15 @@ public class ClientCurrencyTradeCreatorTests
         var creator = new ClientCurrencyTradeCreator(
             model.BrokerTradeCreator, 
             model.Locker.Object,
-            _dbContext,
-            _currencyRepository,
+            model.Db,
+            model.CurrencyRepository,
             model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
         await creator.Create(model.BuyTradeCreationModel, Guid.NewGuid());
 
-        var lastOperatons = _dbContext.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
+        var lastOperatons = model.Db.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
         var buyOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.BuyTradeCreationModel
             .BuyCurrency);
         var sellOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.BuyTradeCreationModel
@@ -144,18 +130,18 @@ public class ClientCurrencyTradeCreatorTests
         var creator = new ClientCurrencyTradeCreator(
             model.BrokerTradeCreator, 
             model.Locker.Object,
-            _dbContext,
-            _currencyRepository,
+            model.Db,
+            model.CurrencyRepository,
             model.CoefficientProvider,
             model.OperationRecorder,
             new DomainCalculatorProvider()
         );
         await creator.Create(model.SellTradeCreationModel, Guid.NewGuid());
 
-        var lastOperatons = _dbContext.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
-        var buyOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.SellTradeCreationModel
+        var lastOperations = model.Db.Operations.OrderByDescending(o => o.Id).Take(2).ToList();
+        var buyOperation = lastOperations.FirstOrDefault(o=>o.Currency.IsoCode == model.SellTradeCreationModel
             .BuyCurrency);
-        var sellOperation = lastOperatons.FirstOrDefault(o=>o.Currency.IsoCode == model.SellTradeCreationModel
+        var sellOperation = lastOperations.FirstOrDefault(o=>o.Currency.IsoCode == model.SellTradeCreationModel
             .SellCurrency);
         Assert.That(sellOperation.Amount == model.SellTradeCreationModel.SellCount*(-1), 
             $"Added sell operation contains invalid amount. Expected {model.SellTradeCreationModel.SellCount*(-1)}, " +
