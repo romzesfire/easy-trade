@@ -1,0 +1,20 @@
+version: "1.0"
+services:
+  web:
+    container_name: easy-trade
+    build:
+      dockerfile: ./Dockerfile
+    depends_on: [ postgres ]
+    ports:
+      - "8080:80"
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: "easy.trade.db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234567"
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
