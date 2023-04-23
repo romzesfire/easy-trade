@@ -39,10 +39,10 @@ public class AccountController : ControllerBase
     // }
      
     [HttpGet("Balances/{isoCode}")]
-    public IActionResult GetBalanceByCode([MaxLength(3)]string isoCode)
+    public async Task<IActionResult> GetBalanceByCode([MaxLength(3)]string isoCode)
     {
         var user = _claimsExecutor.GetUserId(User.Claims);
-        var balance = _balanceProvider.GetBalance(isoCode, user);
+        var balance = await _balanceProvider.GetBalance(isoCode, user);
         return Ok(balance);
     }
     

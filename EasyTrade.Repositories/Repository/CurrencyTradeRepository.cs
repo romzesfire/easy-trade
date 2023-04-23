@@ -22,8 +22,17 @@ public class CurrencyTradeRepository : IRepository<ClientCurrencyTrade, int>
 
     public (IEnumerable<ClientCurrencyTrade>, int) GetLimited(int limit, int offset, Guid userId)
     {
+        var trades = _db.ClientTrades.OrderByDescending(t => t.DateTime)
+            .Where(t => t.AccountId == userId)
+            .Skip(offset)
+            .Take(limit)
+            .Include(t => t.BrokerCurrencyTrade)
+            .Include(t => t.BuyCcy)
+            .Include(t => t.SellCcy)
+            .ToList();
         return (_db.ClientTrades.OrderByDescending(t=>t.DateTime)
-            .Skip(offset).Take(limit).Where(t=>t.AccountId == userId).Include(t => t.BrokerCurrencyTrade)
+            .Where(t=>t.AccountId == userId)
+            .Skip(offset).Take(limit).Include(t => t.BrokerCurrencyTrade)
             .Include(t => t.BuyCcy)
             .Include(t => t.SellCcy).ToList(), _db.ClientTrades.Count());
     }

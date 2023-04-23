@@ -1,6 +1,7 @@
 using EasyTrade.Domain.Model;
+using EasyTrade.Service.Model.ResponseModels;
 
-namespace EasyTrade.Service.Model.ResponseModels;
+namespace EasyTrade.DTO.Model.ResponseModels;
 
 public class BalanceResponse
 {

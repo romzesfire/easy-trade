@@ -1,3 +1,4 @@
+using EasyTrade.DTO.Model.ResponseModels;
 using EasyTrade.Service.Model.ResponseModels;
 
 namespace EasyTrade.DTO.Abstractions;

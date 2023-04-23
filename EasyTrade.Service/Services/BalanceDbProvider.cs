@@ -1,5 +1,6 @@
 using EasyTrade.Domain.Model;
 using EasyTrade.DTO.Abstractions;
+using EasyTrade.DTO.Model.ResponseModels;
 using EasyTrade.Service.Model.ResponseModels;
 
 namespace EasyTrade.Service.Services;

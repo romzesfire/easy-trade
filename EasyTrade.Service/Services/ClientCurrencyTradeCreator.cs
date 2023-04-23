@@ -49,7 +49,7 @@ public class ClientCurrencyTradeCreator : IClientCurrencyTradeCreator
             {
                 AddBalances(clientTrade, userId);
                 _db.AddTrade(clientTrade);
-                _db.SaveChangesAsync();
+                _db.SaveChanges();
             },
             sellCcy
         );

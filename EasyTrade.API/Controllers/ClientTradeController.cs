@@ -46,14 +46,14 @@ public class ClientTradeController : ControllerBase
     {
         var user = _claimsExecutor.GetUserId(User.Claims);
         var trades = _currencyTradesProvider.GetTrades(model.Limit, model.Offset, user);
-        return Ok(trades);
+        return Ok(trades.Item1);
     }
     
     [HttpGet("Trades/{id}")]
-    public IActionResult GetTrade(int id)
+    public async Task<IActionResult> GetTrade(int id)
     {
         var user = _claimsExecutor.GetUserId(User.Claims);
-        var trade = _currencyTradesProvider.GetTrade(id, user);
+        var trade = await _currencyTradesProvider.GetTrade(id, user);
         return Ok(trade);
     }
     
